@@ -1,5 +1,6 @@
 import BeforeAfter from '../../components/BeforeAfter'
 import Callout from '../../components/Callout'
+import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 
 const before1 = `int l = 13;
@@ -99,10 +100,12 @@ export default function Refaktorering() {
   return (
     <LessonLayout module="h3">
       <h1>Praktisk refaktorering</h1>
-      <p>
-        Refaktorering ændrer strukturen uden at ændre adfærd. Skift mellem <strong>før</strong> og{' '}
-        <strong>efter</strong> — og se hvad der gør koden professionel.
-      </p>
+      <LessonIntro>
+        <p>
+          Refaktorering ændrer strukturen uden at ændre adfærd. Skift mellem <strong>før</strong> og{' '}
+          <strong>efter</strong> — og se hvad der gør koden professionel.
+        </p>
+      </LessonIntro>
 
       <h2>Workshop 1: Knap og LED</h2>
       <BeforeAfter

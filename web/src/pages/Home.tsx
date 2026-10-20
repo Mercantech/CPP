@@ -2,39 +2,83 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
   return (
-    <>
-      <section className="hero" aria-label="CPP forsides">
-        <div className="hero__glow" aria-hidden />
-        <p className="hero__brand">CPP</p>
-        <h1 className="hero__title">C++ til H3 og H5</h1>
-        <p className="hero__lead">
-          Struktureret Arduino-kode, sprogets historie og den røde tråd til C# — bygget til undervisning
-          på Mercantec.
-        </p>
-        <div className="cta-row">
-          <Link className="btn btn--primary" to="/h3">
-            Start H3-pensum
+    <div className="home">
+      <section className="home-hero" aria-label="CPP">
+        <div className="home-hero__copy">
+          <p className="home-hero__eyebrow">Mercantec · Datatekniker</p>
+          <h1 className="home-hero__brand">
+            C<span>++</span>
+          </h1>
+          <p className="home-hero__title">Struktureret kode til H3 — og historien bag sproget</p>
+          <p className="home-hero__lead">
+            Undervisningssider om Arduino C++: funktioner, datatyper, filopdeling og den røde tråd
+            fra C til C#. Ingen login. Bare pensum.
+          </p>
+          <div className="cta-row">
+            <Link className="btn btn--primary" to="/h3">
+              Åbn H3
+            </Link>
+            <Link className="btn btn--ghost" to="/historie">
+              Læs historien
+            </Link>
+          </div>
+        </div>
+        <aside className="home-hero__code" aria-hidden="true">
+          <pre>{`// H3 — hold loop() tynd
+const int LED_PIN = 13;
+
+void blink(int ms) {
+  digitalWrite(LED_PIN, HIGH);
+  delay(ms);
+  digitalWrite(LED_PIN, LOW);
+  delay(ms);
+}
+
+void loop() {
+  blink(500);
+}`}</pre>
+        </aside>
+      </section>
+
+      <section className="home-paths" aria-label="Indhold">
+        <h2 className="home-section-title">Hvor vil du hen?</h2>
+        <div className="path-list">
+          <Link className="path-row" to="/historie">
+            <span className="path-row__num">01</span>
+            <span className="path-row__body">
+              <span className="path-row__label">Historie</span>
+              <span className="path-row__desc">
+                Interaktiv tidslinje: Simula, C, Stroustrup, ISO, Java, C#, Arduino
+              </span>
+            </span>
+            <span className="path-row__arrow" aria-hidden>
+              →
+            </span>
           </Link>
-          <Link className="btn btn--ghost" to="/historie">
-            Udforsk historien
+          <Link className="path-row" to="/h3">
+            <span className="path-row__num">02</span>
+            <span className="path-row__body">
+              <span className="path-row__label">H3 · Struktureret C++</span>
+              <span className="path-row__desc">
+                Funktioner, typer, scope, .h/.cpp, kodestandarder, refaktorering, videnstjek
+              </span>
+            </span>
+            <span className="path-row__arrow" aria-hidden>
+              →
+            </span>
+          </Link>
+          <Link className="path-row path-row--muted" to="/h5">
+            <span className="path-row__num">03</span>
+            <span className="path-row__body">
+              <span className="path-row__label">H5</span>
+              <span className="path-row__desc">Kommer snart</span>
+            </span>
+            <span className="path-row__arrow" aria-hidden>
+              →
+            </span>
           </Link>
         </div>
       </section>
-
-      <div className="hub-grid">
-        <Link className="hub-link" to="/historie">
-          <h2>Historie</h2>
-          <p>Fra C og Bell Labs til C++, Stroustrup og arven i C# og Arduino.</p>
-        </Link>
-        <Link className="hub-link" to="/h3">
-          <h2>H3</h2>
-          <p>Funktioner, datatyper, scope, .h/.cpp-filopdeling og kodestandarder.</p>
-        </Link>
-        <Link className="hub-link" to="/h5">
-          <h2>H5</h2>
-          <p>Næste niveau — kommer snart.</p>
-        </Link>
-      </div>
-    </>
+    </div>
   )
 }

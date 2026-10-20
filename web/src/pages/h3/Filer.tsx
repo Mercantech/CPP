@@ -1,6 +1,7 @@
 import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
 import FileProjectExplorer from '../../components/FileProjectExplorer'
+import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { sensorProject } from '../../data/projects'
 
@@ -8,20 +9,46 @@ export default function Filer() {
   return (
     <LessonLayout module="h3">
       <h1>Organisering med .h og .cpp</h1>
-      <p>
-        Når projekter vokser, opdeler du koden i filer. Headeren er kontrakten. Implementationen er
-        arbejdet. Sketch’en er dirigenten.
-      </p>
+      <LessonIntro>
+        <p>
+          Headeren er kontrakten. Implementationen er arbejdet. Sketch’en er dirigenten. Når du
+          forstår include og linking, forstår du, hvorfor store Arduino-projekter ikke skal leve i én
+          fil.
+        </p>
+      </LessonIntro>
+
+      <h2>Rollerne</h2>
+      <div className="why-grid">
+        <div className="why-card">
+          <h3>.ino</h3>
+          <p>
+            Entry point: <code>setup</code> / <code>loop</code>. Skal være tynd og kalde moduler.
+          </p>
+        </div>
+        <div className="why-card">
+          <h3>.h</h3>
+          <p>Deklarationer, konstanter, include guards — “indholdsfortegnelsen”.</p>
+        </div>
+        <div className="why-card">
+          <h3>.cpp</h3>
+          <p>Funktionskroppe. Inkluderer egen header. Her bor detaljerne.</p>
+        </div>
+        <div className="why-card">
+          <h3>Linker</h3>
+          <p>Sætter kald fra .ino sammen med kroppe i .cpp til ét program.</p>
+        </div>
+      </div>
 
       <h2>Udforsk et projekt</h2>
       <p>Klik filerne — se hvad der hører hjemme hvor, og hvordan de hænger sammen.</p>
       <FileProjectExplorer files={sensorProject} title="SensorSketch" />
 
-      <h2>Include-flowet</h2>
+      <h2>Include er tekst-indsættelse</h2>
       <p>
-        Når compileren ser <code>#include "sensor.h"</code>, indsættes headerens indhold tekstuelt
-        på det sted. Det er derfor prototyperne i <code>.h</code> gør funktionerne kendte i{' '}
-        <code>main.ino</code> — mens kroppen ligger i <code>sensor.cpp</code>.
+        Når compileren (egentlig præprocessoren) ser <code>#include "sensor.h"</code>, indsættes
+        headerens indhold <strong>tekstuelt</strong> på det sted. Derfor bliver prototyperne synlige
+        i <code>main.ino</code>, mens kroppene stadig bor i <code>sensor.cpp</code> og findes ved
+        link.
       </p>
       <div className="include-flow" aria-label="Include flow">
         <span className="include-flow__chip include-flow__chip--active">main.ino</span>
@@ -126,6 +153,19 @@ export default function Filer() {
         </p>
       </Callout>
 
+      <h2>Hvad linker’en egentlig gør</h2>
+      <p>
+        Compile giver dig objektfiler med “huller”: kaldet <code>readTemperature()</code> i .ino ved,
+        at funktionen findes (pga. prototypen), men adressen kendes først, når{' '}
+        <code>sensor.cpp</code> er linket ind. Mangler .cpp’en i projektet → “undefined reference”.
+      </p>
+      <Callout type="info">
+        <p>
+          I Arduino IDE: læg <code>.h</code> og <code>.cpp</code> i samme sketch-mappe som{' '}
+          <code>.ino</code>. Fanerne dukker op automatisk.
+        </p>
+      </Callout>
+
       <h2>Mini-regler for flot filopdeling</h2>
       <ul>
         <li>
@@ -136,6 +176,7 @@ export default function Filer() {
         </li>
         <li>Offentligt API i headeren, private hjælpere kun i .cpp (fx <code>static</code>)</li>
         <li>Konstanter der deles → header; kun-interne → .cpp</li>
+        <li>Hold include-grafen acyklisk — fælles typer i en lille <code>types.h</code> om nødvendigt</li>
       </ul>
     </LessonLayout>
   )

@@ -1,17 +1,24 @@
 import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
+import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 
 export default function Datatyper() {
   return (
     <LessonLayout module="h3">
       <h1>Datatyper i Arduino C++</h1>
-      <p>
-        At vælge den rigtige datatype er vigtigt for både hukommelse og korrekt funktionalitet —
-        især på Uno, hvor RAM er knap.
-      </p>
+      <LessonIntro>
+        <p>
+          Typen fortæller både <em>hvad</em> værdien betyder, og <em>hvor meget hukommelse</em> den
+          fylder. På Uno (2 KB SRAM) er det ikke akademisk — det er praktisk.
+        </p>
+      </LessonIntro>
 
       <h2>Heltal</h2>
+      <p>
+        Bemærk: størrelser nedenfor gælder typisk <strong>AVR / Uno</strong>. På 32-bit boards (fx
+        nogle SAMD/ESP) er <code>int</code> ofte 4 bytes.
+      </p>
       <table className="datatype-table">
         <thead>
           <tr>
@@ -28,7 +35,7 @@ export default function Datatyper() {
             </td>
             <td>1</td>
             <td>0 … 255</td>
-            <td>Små positive værdier, PWM</td>
+            <td>PWM, små tællere</td>
           </tr>
           <tr>
             <td>
@@ -36,7 +43,7 @@ export default function Datatyper() {
             </td>
             <td>2</td>
             <td>−32 768 … 32 767</td>
-            <td>Standard heltal, pins, tællere</td>
+            <td>Standard heltal, analogRead</td>
           </tr>
           <tr>
             <td>
@@ -44,7 +51,7 @@ export default function Datatyper() {
             </td>
             <td>2</td>
             <td>0 … 65 535</td>
-            <td>Kun positive værdier</td>
+            <td>Kun positive, større range</td>
           </tr>
           <tr>
             <td>
@@ -67,7 +74,7 @@ export default function Datatyper() {
         </tbody>
       </table>
 
-      <h2>Decimaltal og øvrige</h2>
+      <h2>Decimaltal, bool og tekst</h2>
       <table className="datatype-table">
         <thead>
           <tr>
@@ -82,18 +89,18 @@ export default function Datatyper() {
               <code>float</code>
             </td>
             <td>4</td>
-            <td>~6–7 cifres præcision</td>
+            <td>~6–7 betydende cifre — fint til temperatur</td>
           </tr>
           <tr>
             <td>
               <code>double</code>
             </td>
             <td>4 (Uno)</td>
-            <td>Samme som float på mange AVR-boards</td>
+            <td>Ofte samme som float på AVR</td>
           </tr>
           <tr>
             <td>
-              <code>boolean</code> / <code>bool</code>
+              <code>bool</code> / <code>boolean</code>
             </td>
             <td>1</td>
             <td>
@@ -105,40 +112,76 @@ export default function Datatyper() {
               <code>char</code>
             </td>
             <td>1</td>
-            <td>Enkelt tegn eller −128…127</td>
+            <td>Ét tegn; til tekstbuffere brug arrays / <code>String</code> forsigtigt</td>
           </tr>
           <tr>
             <td>
               <code>String</code>
             </td>
             <td>variabel</td>
-            <td>Tekst — brug med omtanke (heap)</td>
+            <td>Praktisk, men kan fragmentere heap — undgå i stramme loops</td>
           </tr>
         </tbody>
       </table>
 
-      <h2>Eksempel: blandede typer</h2>
-      <CodeBlock language="cpp">{`int ledPin = 13;                    // Pin number
-unsigned long lastUpdate = 0;       // Timestamp from millis()
-boolean ledState = false;           // LED state
-float temperature = 23.5;           // Temperature in celsius
-byte brightness = 128;              // PWM value (0-255)
-const int SENSOR_PIN = A0;          // Constant (never changes)
+      <h2>Overflow — den stille fejl</h2>
+      <p>
+        Når et heltal går uden for sit range, “folder” det rundt. Det giver rare bugs uden
+        compiler-fejl.
+      </p>
+      <CodeBlock language="cpp">{`int x = 30000;
+x = x + 10000;  // overflow på Uno (int max 32767) → negativt eller forkert tal
 `}</CodeBlock>
-
-      <Callout type="warn">
+      <Callout type="danger">
         <p>
-          Gem aldrig <code>millis()</code> i en <code>int</code> — den overløber efter ca. 32
-          sekunder. Brug <code>unsigned long</code>.
+          Gem aldrig <code>millis()</code> i <code>int</code>. Efter ~32 sekunder overløber den.
+          Brug <code>unsigned long</code> — og sammenlign med subtraktion (
+          <code>millis() - last</code>), som håndterer wrap-around korrekt.
         </p>
       </Callout>
 
+      <h2>const og literals</h2>
+      <CodeBlock language="cpp">{`const int LED_PIN = 13;           // må ikke ændres
+const float VREF = 5.0;           // float-literal med .0
+const unsigned long INTERVAL = 1000UL;  // UL = unsigned long
+`}</CodeBlock>
+
+      <h2>Eksempel: blandede typer i praksis</h2>
+      <CodeBlock language="cpp">{`const int LED_PIN = 13;
+const int SENSOR_PIN = A0;
+
+unsigned long lastUpdate = 0;
+bool ledState = false;
+float temperature = 23.5;
+byte brightness = 128;
+
+void loop() {
+  if (millis() - lastUpdate >= 1000UL) {
+    lastUpdate = millis();
+    int raw = analogRead(SENSOR_PIN);
+    temperature = raw * (5.0 / 1023.0);
+    brightness = (byte)map(raw, 0, 1023, 0, 255);
+  }
+}
+`}</CodeBlock>
+
       <h2>Vælg bevidst</h2>
       <ul>
-        <li>Pin-numre → <code>const int</code> eller <code>byte</code></li>
-        <li>Temperatur / spænding → <code>float</code></li>
-        <li>Til/fra-tilstand → <code>bool</code></li>
-        <li>Tid → <code>unsigned long</code></li>
+        <li>
+          Pin-numre → <code>const int</code> (eller <code>byte</code> hvis du er stram på RAM)
+        </li>
+        <li>
+          Temperatur / spænding → <code>float</code>
+        </li>
+        <li>
+          Til/fra → <code>bool</code>
+        </li>
+        <li>
+          Tid → <code>unsigned long</code>
+        </li>
+        <li>
+          PWM 0–255 → <code>byte</code>
+        </li>
       </ul>
     </LessonLayout>
   )
