@@ -7,12 +7,6 @@ import { TEMPLATE_REPO_URL } from '../../data/projects'
 
 const route = [
   {
-    to: '/h3/praesentation',
-    num: '▶',
-    title: 'Hele H3-slideshow',
-    desc: 'Samlet præsentation af hele pensummet i én gennemgang',
-  },
-  {
     to: '/h3/funktioner',
     num: '02',
     title: 'Funktioner',
@@ -106,9 +100,9 @@ export function OversigtContent() {
 
       <Callout type="tip">
         <p>
-          Undervis hele pensummet i ét hug via{' '}
-          <Link to="/h3/praesentation">Hele H3-slideshow</Link> — eller brug{' '}
-          <strong>Præsentér side</strong> til kun denne lektion. Klon templaten, når I skal kode.
+          Tryk <strong>Præsentér</strong> — når du er færdig med sektionerne på denne side, går{' '}
+          <strong>Næste</strong> automatisk videre til Funktioner, så hele H3 hænger sammen. Klon
+          templaten, når I skal kode.
         </p>
       </Callout>
 

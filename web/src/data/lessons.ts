@@ -23,7 +23,6 @@ export const lessonModules: LessonModuleNav[] = [
     module: 'h3',
     title: 'H3 · Struktureret C++',
     items: [
-      { slug: 'praesentation', label: 'Hele H3 (slideshow)', path: '/h3/praesentation', num: '▶' },
       { slug: 'oversigt', label: 'Oversigt', path: '/h3', num: '01' },
       { slug: 'funktioner', label: 'Funktioner', path: '/h3/funktioner', num: '02' },
       { slug: 'datatyper', label: 'Datatyper', path: '/h3/datatyper', num: '03' },
@@ -36,10 +35,27 @@ export const lessonModules: LessonModuleNav[] = [
   },
 ]
 
+/** H3-lektioner i præsentationsrækkefølge (Næste skifter side automatisk). */
+export const h3PresentSequence = lessonModules
+  .find((m) => m.module === 'h3')!
+  .items.map((item) => ({ path: item.path, label: item.label, num: item.num ?? '' }))
+
 export function getModuleNav(module: LessonModule): LessonModuleNav {
   const found = lessonModules.find((m) => m.module === module)
   if (!found) throw new Error(`Unknown module: ${module}`)
   return found
+}
+
+export function getH3PresentNeighbors(pathname: string) {
+  const idx = h3PresentSequence.findIndex((s) => s.path === pathname)
+  if (idx < 0) return null
+  return {
+    index: idx,
+    total: h3PresentSequence.length,
+    current: h3PresentSequence[idx],
+    prev: idx > 0 ? h3PresentSequence[idx - 1] : null,
+    next: idx < h3PresentSequence.length - 1 ? h3PresentSequence[idx + 1] : null,
+  }
 }
 
 export const h3Objectives = [

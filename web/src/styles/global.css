@@ -1034,6 +1034,16 @@ code {
   color: var(--cyan);
 }
 
+.present-mode__chapter-meta {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.present-mode__next-hint {
+  color: var(--cyan);
+  font-size: 0.85em;
+}
+
 .present-mode__title {
   margin: 0;
   font-weight: 700;

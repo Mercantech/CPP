@@ -6,16 +6,16 @@ import {
   type RefObject,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { getH3PresentNeighbors } from '../data/lessons'
 import { buildSlides, type Slide } from '../lib/buildSlides'
 import ImageLightbox, { type LightboxImage } from './ImageLightbox'
 
 type PresentModeProps = {
   contentRef: RefObject<HTMLElement | null>
-  /** Start slideshow on mount (used by full H3 deck). */
-  autoOpen?: boolean
   buttonLabel?: string
-  /** Hide individual dots when the deck is long. */
-  compactChrome?: boolean
+  /** Chain Næste/Forrige across H3 lesson pages. */
+  chainH3?: boolean
 }
 
 function imageFromClickTarget(target: EventTarget | null): LightboxImage | null {
@@ -43,47 +43,103 @@ function imageFromClickTarget(target: EventTarget | null): LightboxImage | null 
 
 export default function PresentMode({
   contentRef,
-  autoOpen = false,
   buttonLabel = 'Præsentér',
-  compactChrome = false,
+  chainH3 = false,
 }: PresentModeProps) {
   const titleId = useId()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const neighbors = chainH3 ? getH3PresentNeighbors(location.pathname) : null
+
   const [open, setOpen] = useState(false)
   const [slides, setSlides] = useState<Slide[]>([])
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
 
+  const clearPresentParam = useCallback(() => {
+    if (!searchParams.has('present')) return
+    const next = new URLSearchParams(searchParams)
+    next.delete('present')
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+
   const close = useCallback(() => {
     setLightbox(null)
     setOpen(false)
     setIndex(0)
+    clearPresentParam()
     if (document.fullscreenElement) {
       void document.exitFullscreen().catch(() => undefined)
     }
-  }, [])
+  }, [clearPresentParam])
 
-  const openPresent = useCallback(() => {
-    const root = contentRef.current
-    if (!root) return
-    const next = buildSlides(root)
-    if (next.length === 0) return
-    setSlides(next)
-    setIndex(0)
-    setLightbox(null)
-    setOpen(true)
-  }, [contentRef])
+  const openPresent = useCallback(
+    (start: 'start' | 'end' = 'start') => {
+      const root = contentRef.current
+      if (!root) return
+      const next = buildSlides(root)
+      if (next.length === 0) return
+      setSlides(next)
+      setIndex(start === 'end' ? next.length - 1 : 0)
+      setLightbox(null)
+      setOpen(true)
+      if (chainH3 && !searchParams.has('present')) {
+        const params = new URLSearchParams(searchParams)
+        params.set('present', start === 'end' ? 'end' : '1')
+        setSearchParams(params, { replace: true })
+      }
+    },
+    [contentRef, chainH3, searchParams, setSearchParams],
+  )
 
+  // Auto-open when arriving via ?present=1|end (page chain)
   useEffect(() => {
-    if (!autoOpen) return
-    const t = window.setTimeout(() => openPresent(), 80)
+    const flag = searchParams.get('present')
+    if (flag !== '1' && flag !== 'end') return
+    const t = window.setTimeout(() => {
+      openPresent(flag === 'end' ? 'end' : 'start')
+    }, 60)
     return () => window.clearTimeout(t)
-  }, [autoOpen, openPresent])
+    // Only react to pathname + present flag, not openPresent identity
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, searchParams.get('present')])
+
+  const goAdjacentLesson = useCallback(
+    (dir: 'prev' | 'next') => {
+      if (!neighbors) return
+      const target = dir === 'next' ? neighbors.next : neighbors.prev
+      if (!target) return
+      const wasFs = Boolean(document.fullscreenElement)
+      navigate(`${target.path}?present=${dir === 'next' ? '1' : 'end'}`)
+      // Fullscreen ends on navigation; user can press F again
+      void wasFs
+    },
+    [navigate, neighbors],
+  )
 
   const go = useCallback(
     (delta: number) => {
-      setIndex((i) => Math.min(slides.length - 1, Math.max(0, i + delta)))
+      setIndex((i) => {
+        const next = i + delta
+        if (next > slides.length - 1) {
+          if (chainH3 && neighbors?.next) {
+            queueMicrotask(() => goAdjacentLesson('next'))
+            return i
+          }
+          return slides.length - 1
+        }
+        if (next < 0) {
+          if (chainH3 && neighbors?.prev) {
+            queueMicrotask(() => goAdjacentLesson('prev'))
+            return i
+          }
+          return 0
+        }
+        return next
+      })
     },
-    [slides.length],
+    [slides.length, chainH3, neighbors, goAdjacentLesson],
   )
 
   useEffect(() => {
@@ -161,18 +217,27 @@ export default function PresentMode({
   }, [index])
 
   const slide = slides[index]
-  const atStart = index <= 0
-  const atEnd = index >= slides.length - 1
-  const useCompact = compactChrome || slides.length > 24
-  const progressPct = slides.length ? ((index + 1) / slides.length) * 100 : 0
+  const atFirstSlide = index <= 0
+  const atLastSlide = index >= slides.length - 1
+  const canPrev = !atFirstSlide || Boolean(neighbors?.prev)
+  const canNext = !atLastSlide || Boolean(neighbors?.next)
+
+  const lessonProgress =
+    neighbors && slides.length
+      ? ((neighbors.index + (index + 1) / slides.length) / neighbors.total) * 100
+      : slides.length
+        ? ((index + 1) / slides.length) * 100
+        : 0
 
   return (
     <>
-      {!autoOpen ? (
-        <button type="button" className="btn btn--ghost present-mode__trigger" onClick={openPresent}>
-          {buttonLabel}
-        </button>
-      ) : null}
+      <button
+        type="button"
+        className="btn btn--primary present-mode__trigger"
+        onClick={() => openPresent('start')}
+      >
+        {buttonLabel}
+      </button>
 
       {open && slide
         ? createPortal(
@@ -184,7 +249,15 @@ export default function PresentMode({
             >
               <div className="present-mode__chrome">
                 <div className="present-mode__titles">
-                  {slide.chapter ? (
+                  {neighbors ? (
+                    <p className="present-mode__chapter">
+                      {neighbors.current.num} · {neighbors.current.label}
+                      <span className="present-mode__chapter-meta">
+                        {' '}
+                        · lektion {neighbors.index + 1}/{neighbors.total}
+                      </span>
+                    </p>
+                  ) : slide.chapter ? (
                     <p className="present-mode__chapter">{slide.chapter}</p>
                   ) : null}
                   <p id={titleId} className="present-mode__title">
@@ -193,13 +266,19 @@ export default function PresentMode({
                 </div>
                 <p className="present-mode__progress" aria-live="polite">
                   {index + 1} / {slides.length}
+                  {atLastSlide && neighbors?.next ? (
+                    <span className="present-mode__next-hint">
+                      {' '}
+                      → {neighbors.next.label}
+                    </span>
+                  ) : null}
                 </p>
                 <div className="present-mode__actions">
                   <button
                     type="button"
                     className="btn btn--ghost"
                     onClick={() => go(-1)}
-                    disabled={atStart}
+                    disabled={!canPrev}
                   >
                     Forrige
                   </button>
@@ -207,7 +286,7 @@ export default function PresentMode({
                     type="button"
                     className="btn btn--ghost"
                     onClick={() => go(1)}
-                    disabled={atEnd}
+                    disabled={!canNext}
                   >
                     Næste
                   </button>
@@ -218,7 +297,7 @@ export default function PresentMode({
               </div>
 
               <div className="present-mode__bar" aria-hidden="true">
-                <span style={{ width: `${progressPct}%` }} />
+                <span style={{ width: `${lessonProgress}%` }} />
               </div>
 
               <div className="present-mode__stage">
@@ -229,10 +308,12 @@ export default function PresentMode({
               </div>
 
               <p className="present-mode__hint">
-                ← → for slides · Esc for luk · F for fuldskærm · Home/End til start/slut
+                ← → skifter sektion
+                {chainH3 ? ' og går videre til næste H3-side' : ''}
+                {' · '}Esc luk · F fuldskærm
               </p>
 
-              {!useCompact ? (
+              {slides.length <= 24 ? (
                 <div className="present-mode__dots" aria-hidden="true">
                   {slides.map((_, i) => (
                     <button

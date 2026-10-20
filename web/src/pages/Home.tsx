@@ -15,8 +15,8 @@ export default function Home() {
             fra C til C#. Ingen login. Bare pensum.
           </p>
           <div className="cta-row">
-            <Link className="btn btn--primary" to="/h3/praesentation">
-              Start H3-slideshow
+            <Link className="btn btn--primary" to="/h3?present=1">
+              Præsentér H3
             </Link>
             <Link className="btn btn--ghost" to="/h3">
               Åbn H3
@@ -56,12 +56,12 @@ if (nowMs - lastDisplayUpdateMs
               →
             </span>
           </Link>
-          <Link className="path-row" to="/h3/praesentation">
+          <Link className="path-row" to="/h3?present=1">
             <span className="path-row__num">02</span>
             <span className="path-row__body">
-              <span className="path-row__label">H3 · Samlet slideshow</span>
+              <span className="path-row__label">H3 · Præsentér</span>
               <span className="path-row__desc">
-                Hele pensummet i én præsentation — fra oversigt til videnstjek
+                Start fra Oversigt — Næste går videre til Funktioner, Datatyper, …
               </span>
             </span>
             <span className="path-row__arrow" aria-hidden>
@@ -73,7 +73,7 @@ if (nowMs - lastDisplayUpdateMs
             <span className="path-row__body">
               <span className="path-row__label">H3 · Lektioner</span>
               <span className="path-row__desc">
-                Funktioner, typer, scope, .h/.cpp, kodestandarder — side for side
+                Læs side for side — samme Præsentér-knap kæder også siderne
               </span>
             </span>
             <span className="path-row__arrow" aria-hidden>
