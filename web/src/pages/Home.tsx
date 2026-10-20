@@ -24,18 +24,16 @@ export default function Home() {
           </div>
         </div>
         <aside className="home-hero__code" aria-hidden="true">
-          <pre>{`// H3 — hold loop() tynd
-const int LED_PIN = 13;
+          <pre>{`// H3 template — main.cpp wiring only
+const SensorReading reading =
+  readEnvironmentSensors(carrier);
 
-void blink(int ms) {
-  digitalWrite(LED_PIN, HIGH);
-  delay(ms);
-  digitalWrite(LED_PIN, LOW);
-  delay(ms);
-}
-
-void loop() {
-  blink(500);
+if (nowMs - lastDisplayUpdateMs
+    >= DISPLAY_INTERVAL_MS) {
+  lastDisplayUpdateMs = nowMs;
+  renderSensorScreen(
+    carrier, reading,
+    shakeDetected, lastGestureLabel);
 }`}</pre>
         </aside>
       </section>

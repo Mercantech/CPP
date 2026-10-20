@@ -165,22 +165,40 @@ void loop() {
 }
 `}</CodeBlock>
 
+      <h2>I H3-templaten: SensorReading</h2>
+      <p>
+        Flere floats samles i én struct i <code>types.h</code> — så sensor- og display-moduler deler
+        samme datamodel uden løse globale variabler:
+      </p>
+      <CodeBlock language="cpp">{`struct SensorReading {
+  float temperatureCelsius;
+  float humidityPercent;
+  float pressureKPa;
+};
+`}</CodeBlock>
+      <Callout type="tip">
+        <p>
+          Navnene er engelske og enhederne sidder i identifikatoren (
+          <code>temperatureCelsius</code>) — præcis template-stilen.
+        </p>
+      </Callout>
+
       <h2>Vælg bevidst</h2>
       <ul>
         <li>
-          Pin-numre → <code>const int</code> (eller <code>byte</code> hvis du er stram på RAM)
+          Temperatur / fugt / tryk → <code>float</code> (som i <code>SensorReading</code>)
         </li>
         <li>
-          Temperatur / spænding → <code>float</code>
+          Flags som shake-mode → <code>bool</code>
         </li>
         <li>
-          Til/fra → <code>bool</code>
+          Tid (<code>lastDisplayUpdateMs</code>) → <code>unsigned long</code>
         </li>
         <li>
-          Tid → <code>unsigned long</code>
+          Config-tal → <code>#define</code> / konstant i <code>config.h</code>
         </li>
         <li>
-          PWM 0–255 → <code>byte</code>
+          RGB-kanaler i <code>temperatureToRgb</code> → <code>int</code> (0–255)
         </li>
       </ul>
     </LessonLayout>

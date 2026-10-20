@@ -792,7 +792,10 @@ code {
 }
 
 .file-explorer__tree button {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
   width: 100%;
   text-align: left;
   padding: 0.45rem 0.55rem;
@@ -803,6 +806,12 @@ code {
   font-family: var(--font-mono);
   font-size: 0.82rem;
   cursor: pointer;
+}
+
+.file-explorer__path {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  word-break: break-all;
 }
 
 .file-explorer__tree button:hover,

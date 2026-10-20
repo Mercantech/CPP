@@ -144,8 +144,17 @@ export default function Refaktorering() {
 
       <Callout type="tip">
         <p>
-          Tjekliste når du refaktorerer: 1) navngiv konstanter, 2) udtræk funktioner, 3) vælg
-          rigtige typer, 4) hold <code>loop()</code> kort.
+          Facit-retningen er H3-templaten: engelske navne, konstanter i config, data i{' '}
+          <code>types.h</code>, logik i moduler, <code>main</code>/<code>loop</code> som tynd
+          wiring. Se{' '}
+          <a
+            href="https://github.com/Mercantech/H3/tree/main/Arduino"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Mercantech/H3/Arduino
+          </a>
+          .
         </p>
       </Callout>
     </LessonLayout>

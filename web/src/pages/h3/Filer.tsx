@@ -3,181 +3,247 @@ import CodeBlock from '../../components/CodeBlock'
 import FileProjectExplorer from '../../components/FileProjectExplorer'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
-import { sensorProject } from '../../data/projects'
+import { oplaProject, TEMPLATE_REPO_URL } from '../../data/projects'
 
 export default function Filer() {
   return (
     <LessonLayout module="h3">
-      <h1>Organisering med .h og .cpp</h1>
+      <h1>Filopdeling: H3 Oplà-templaten</h1>
       <LessonIntro>
         <p>
-          Headeren er kontrakten. Implementationen er arbejdet. Sketch’en er dirigenten. Når du
-          forstår include og linking, forstår du, hvorfor store Arduino-projekter ikke skal leve i én
-          fil.
+          Teorien her følger Mercantechs rigtige undervisningsskabelon —{' '}
+          <a href={TEMPLATE_REPO_URL} target="_blank" rel="noreferrer">
+            H3/Arduino
+          </a>{' '}
+          (MKR WiFi 1010 + Oplà IoT Carrier) med PlatformIO, <code>include/</code> +{' '}
+          <code>src/</code> og tynd <code>main.cpp</code>.
         </p>
       </LessonIntro>
 
-      <h2>Rollerne</h2>
+      <h2>PlatformIO-mapper</h2>
       <div className="why-grid">
         <div className="why-card">
-          <h3>.ino</h3>
+          <h3>src/</h3>
           <p>
-            Entry point: <code>setup</code> / <code>loop</code>. Skal være tynd og kalde moduler.
+            Alle <code>.cpp</code> — inkl. <code>main.cpp</code> (wiring only).
           </p>
         </div>
         <div className="why-card">
-          <h3>.h</h3>
-          <p>Deklarationer, konstanter, include guards — “indholdsfortegnelsen”.</p>
+          <h3>include/</h3>
+          <p>
+            Alle <code>.h</code> — PlatformIO lægger mappen automatisk på include-path.
+          </p>
         </div>
         <div className="why-card">
-          <h3>.cpp</h3>
-          <p>Funktionskroppe. Inkluderer egen header. Her bor detaljerne.</p>
+          <h3>lib/</h3>
+          <p>Valgfri lokale biblioteker (tom i demoen).</p>
         </div>
         <div className="why-card">
-          <h3>Linker</h3>
-          <p>Sætter kald fra .ino sammen med kroppe i .cpp til ét program.</p>
+          <h3>test/</h3>
+          <p>
+            Unity-tests — fx <code>pio test -e native</code> for pure logic.
+          </p>
         </div>
       </div>
 
-      <h2>Udforsk et projekt</h2>
-      <p>Klik filerne — se hvad der hører hjemme hvor, og hvordan de hænger sammen.</p>
-      <FileProjectExplorer files={sensorProject} title="SensorSketch" />
-
-      <h2>Include er tekst-indsættelse</h2>
-      <p>
-        Når compileren (egentlig præprocessoren) ser <code>#include "sensor.h"</code>, indsættes
-        headerens indhold <strong>tekstuelt</strong> på det sted. Derfor bliver prototyperne synlige
-        i <code>main.ino</code>, mens kroppene stadig bor i <code>sensor.cpp</code> og findes ved
-        link.
-      </p>
-      <div className="include-flow" aria-label="Include flow">
-        <span className="include-flow__chip include-flow__chip--active">main.ino</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">#include "sensor.h"</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">prototyper synlige</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">sensor.cpp implementerer</span>
-      </div>
-
-      <h2>Include guards</h2>
-      <p>
-        Hvis flere filer inkluderer samme header, risikerer du dobbeltdefinitioner. Guard’en sørger
-        for, at indholdet kun behandles én gang:
-      </p>
-      <CodeBlock language="cpp">{`#ifndef SENSOR_H
-#define SENSOR_H
-
-// ... deklarationer ...
-
-#endif
-`}</CodeBlock>
       <Callout type="info">
         <p>
-          Første gang ses <code>SENSOR_H</code> ikke → indholdet læses og makroen sættes. Næste
-          include: <code>#ifndef</code> er falsk → resten springes over.
+          I klassisk Arduino IDE ligger <code>.ino</code> + <code>.h</code>/<code>.cpp</code> i
+          samme sketch-mappe. I H3 bruger I <strong>PlatformIO</strong>: samme C++-idé, klarere
+          mappeopdeling.
         </p>
       </Callout>
 
-      <h2>Anførselstegn vs. vinkelparentes</h2>
-      <ul>
-        <li>
-          <code>#include "sensor.h"</code> — din egen fil (søges først i projektmappen)
-        </li>
-        <li>
-          <code>#include &lt;Arduino.h&gt;</code> — bibliotek / systemheader
-        </li>
-      </ul>
+      <h2>Modulkort (fra templaten)</h2>
+      <table className="datatype-table">
+        <thead>
+          <tr>
+            <th>Modul</th>
+            <th>Filer</th>
+            <th>Ansvar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <strong>Config</strong>
+            </td>
+            <td>
+              <code>include/config.h</code>, <code>src/secrets.h</code>
+            </td>
+            <td>Indstillinger og credentials</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Types</strong>
+            </td>
+            <td>
+              <code>include/types.h</code>
+            </td>
+            <td>
+              <code>SensorReading</code> m.m.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Sensors</strong>
+            </td>
+            <td>
+              <code>environment_sensors.*</code>
+            </td>
+            <td>Temp, fugt, tryk</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Display / LEDs / Input</strong>
+            </td>
+            <td>
+              <code>display_renderer.*</code>, <code>led_controller.*</code>,{' '}
+              <code>shake_detector.*</code>, <code>gesture_reader.*</code>
+            </td>
+            <td>Skærm, RGB-ring, ryst, gesture</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Network</strong>
+            </td>
+            <td>
+              <code>wifi_manager.*</code>
+            </td>
+            <td>Valgfri WiFi</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Logic</strong>
+            </td>
+            <td>
+              <code>temperature_color.*</code>
+            </td>
+            <td>Ren C++ — testbar på PC</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>App</strong>
+            </td>
+            <td>
+              <code>main.cpp</code>
+            </td>
+            <td>
+              <code>setup()</code> + <code>loop()</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Udforsk filerne</h2>
       <p>
-        I <code>.cpp</code>-filer der bruger Arduino-API (fx <code>analogRead</code>) skal{' '}
-        <code>Arduino.h</code> være inkluderet — typisk via din egen header som i eksemplet.
+        Klik rundt i uddrag fra templaten. Læg mærke til: tynd <code>main.cpp</code>, fælles{' '}
+        <code>types.h</code>, og at <code>temperature_color</code> ikke trækker Arduino-hardware ind.
+      </p>
+      <FileProjectExplorer files={oplaProject} title="H3/Arduino" />
+
+      <h2>Include-flow i templaten</h2>
+      <div className="include-flow" aria-label="Include flow">
+        <span className="include-flow__chip include-flow__chip--active">main.cpp</span>
+        <span aria-hidden>→</span>
+        <span className="include-flow__chip">#include "environment_sensors.h"</span>
+        <span aria-hidden>→</span>
+        <span className="include-flow__chip">types.h (SensorReading)</span>
+        <span aria-hidden>→</span>
+        <span className="include-flow__chip">environment_sensors.cpp</span>
+      </div>
+      <p>
+        Præprocessoren indsætter headerens tekst. Linker’en finder senere kroppen i den matchende{' '}
+        <code>.cpp</code>. Mangler filen i <code>src/</code> → “undefined reference”.
       </p>
 
-      <h2>Sådan bygger Arduino IDE’en</h2>
-      <div className="build-steps">
-        <div className="build-steps__step">
-          <span className="build-steps__n">1</span>
-          <div>
-            <strong>Sketch-mappe</strong>
-            <p>
-              Alle <code>.ino</code>, <code>.h</code> og <code>.cpp</code> i samme mappe hører til
-              projektet.
-            </p>
-          </div>
-        </div>
-        <div className="build-steps__step">
-          <span className="build-steps__n">2</span>
-          <div>
-            <strong>Concat + compile</strong>
-            <p>
-              IDE’en samler <code>.ino</code>-filer og oversætter dem sammen med dine{' '}
-              <code>.cpp</code>-filer til objektkode.
-            </p>
-          </div>
-        </div>
-        <div className="build-steps__step">
-          <span className="build-steps__n">3</span>
-          <div>
-            <strong>Link</strong>
-            <p>
-              Linker’en samler objekterne: kald fra <code>main.ino</code> finder kroppene i{' '}
-              <code>sensor.cpp</code>.
-            </p>
-          </div>
-        </div>
-      </div>
+      <h2>Include guards + forward declaration</h2>
+      <p>
+        Templaten bruger klassiske guards (<code>#ifndef TYPES_H</code> …). Sensor-headeren
+        forward-declarerer <code>class MKRIoTCarrier;</code>, så <code>.h</code> ikke behøver at
+        trække hele carrier-biblioteket ind — implementationen inkluderer det i{' '}
+        <code>.cpp</code>.
+      </p>
+      <CodeBlock language="cpp">{`// include/environment_sensors.h
+#include "types.h"
+class MKRIoTCarrier;  // forward — fuld type først i .cpp
+
+SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier);
+`}</CodeBlock>
+
+      <h2>config.h vs secrets.h</h2>
+      <ul>
+        <li>
+          <code>config.h</code> — baud, intervaller, flags. <strong>Må</strong> commits.
+        </li>
+        <li>
+          <code>secrets.h</code> — WiFi/API. Kopiér fra <code>secrets.h.example</code>. Commit{' '}
+          <strong>aldrig</strong> den rigtige fil.
+        </li>
+      </ul>
+
+      <h2>Pure logic + native test</h2>
+      <p>
+        <code>temperature_color.cpp</code> har ingen pins eller Serial — kun matematik. Derfor kan{' '}
+        <code>[env:native]</code> i <code>platformio.ini</code> bygge netop den fil og køre Unity-tests
+        på PC:
+      </p>
+      <CodeBlock language="text">{`pio run -t upload          # firmware til board
+pio test -e native         # unit tests på PC (temperature_color)
+`}</CodeBlock>
+      <Callout type="tip">
+        <p>
+          Det er H3-mønsteret: hardware i egne moduler, beslutningslogik i rene funktioner I kan
+          teste uden board.
+        </p>
+      </Callout>
 
       <h2>Typiske fejl</h2>
       <Callout type="danger">
         <p>
-          <strong>Glemt include guard</strong> → “multiple definition” / redefinition-fejl.
+          <strong>Glemt include guard</strong> → redefinition, når flere filer inkluderer samme{' '}
+          <code>.h</code>.
         </p>
       </Callout>
       <Callout type="danger">
         <p>
-          <strong>Glemt <code>#include &lt;Arduino.h&gt;</code></strong> i en{' '}
-          <code>.cpp</code> der kalder <code>digitalWrite</code> → “was not declared”.
+          <strong>Tung logik i main.cpp</strong> → template-reglen brydes; fejsøgning og tests
+          bliver sværere.
         </p>
       </Callout>
       <Callout type="danger">
         <p>
-          <strong>Cirkulær include</strong> (A.h inkluderer B.h som inkluderer A.h) → kaos. Løsning:
-          flyt fælles typer til en tredje header, eller brug forward declarations.
+          <strong>Secrets i config.h / git</strong> → credentials i historikken. Brug{' '}
+          <code>secrets.h</code> + <code>.gitignore</code>.
         </p>
       </Callout>
       <Callout type="warn">
         <p>
-          <strong>Implementering i .h</strong> (store funktionskroppe) → kan give multiple
-          definition ved link, medmindre du bruger <code>inline</code>. Hold kroppe i{' '}
-          <code>.cpp</code>.
+          <strong>Cirkulære includes</strong> mellem headers → flyt fælles typer til{' '}
+          <code>types.h</code> (som templaten gør).
         </p>
       </Callout>
 
-      <h2>Hvad linker’en egentlig gør</h2>
+      <h2>Sådan udvider I (fra README)</h2>
+      <ol>
+        <li>
+          HTTP/MQTT i <code>wifi_manager</code> eller nyt <code>api_client</code>-modul
+        </li>
+        <li>
+          Udvid <code>SensorReading</code> + <code>environment_sensors</code>
+        </li>
+        <li>
+          Eget dashboard i <code>display_renderer</code>
+        </li>
+        <li>Flere pure-logic moduler med native tests</li>
+      </ol>
+
       <p>
-        Compile giver dig objektfiler med “huller”: kaldet <code>readTemperature()</code> i .ino ved,
-        at funktionen findes (pga. prototypen), men adressen kendes først, når{' '}
-        <code>sensor.cpp</code> er linket ind. Mangler .cpp’en i projektet → “undefined reference”.
+        Klon og kør:{' '}
+        <a href={TEMPLATE_REPO_URL} target="_blank" rel="noreferrer">
+          github.com/Mercantech/H3/tree/main/Arduino
+        </a>
       </p>
-      <Callout type="info">
-        <p>
-          I Arduino IDE: læg <code>.h</code> og <code>.cpp</code> i samme sketch-mappe som{' '}
-          <code>.ino</code>. Fanerne dukker op automatisk.
-        </p>
-      </Callout>
-
-      <h2>Mini-regler for flot filopdeling</h2>
-      <ul>
-        <li>
-          Én “modul”-idé pr. par: <code>sensor.h</code> + <code>sensor.cpp</code>
-        </li>
-        <li>
-          <code>.ino</code> orkestrerer — den skal være tynd
-        </li>
-        <li>Offentligt API i headeren, private hjælpere kun i .cpp (fx <code>static</code>)</li>
-        <li>Konstanter der deles → header; kun-interne → .cpp</li>
-        <li>Hold include-grafen acyklisk — fælles typer i en lille <code>types.h</code> om nødvendigt</li>
-      </ul>
     </LessonLayout>
   )
 }

@@ -3,61 +3,64 @@ import Callout from '../../components/Callout'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { h3Objectives } from '../../data/lessons'
+import { TEMPLATE_REPO_URL } from '../../data/projects'
 
 const route = [
   {
     to: '/h3/funktioner',
     num: '02',
     title: 'Funktioner',
-    desc: 'Egne funktioner, parametre, return — hold loop() tynd',
+    desc: 'Modulers API — som readEnvironmentSensors og renderSensorScreen',
   },
   {
     to: '/h3/datatyper',
     num: '03',
     title: 'Datatyper',
-    desc: 'int, long, float, bool, char — og hvorfor millis() kræver unsigned long',
+    desc: 'float, bool, unsigned long — og SensorReading i types.h',
   },
   {
     to: '/h3/scope',
     num: '04',
     title: 'Global vs lokal',
-    desc: 'Synlighed, levetid og static som kompromis',
+    desc: 'Anonymt namespace i main.cpp, static, hvornår state må deles',
   },
   {
     to: '/h3/filer',
     num: '05',
     title: 'Filopdeling',
-    desc: '.h / .cpp, include guards, build-flow — i dybden',
+    desc: 'PlatformIO include/ + src/ — hele Oplà-modularkitekturen',
   },
   {
     to: '/h3/kodestandarder',
     num: '06',
     title: 'Kodestandarder',
-    desc: 'Navne, formatering, kommentarer, non-blocking loop',
+    desc: 'Engelsk i kode, dansk i kommentarer, tynd main.cpp',
   },
   {
     to: '/h3/refaktorering',
     num: '07',
     title: 'Refaktorering',
-    desc: 'Før/efter-workshop med knap/LED og temperatur',
+    desc: 'Fra spaghetti til samme stil som templaten',
   },
   {
     to: '/h3/videnstjek',
     num: '08',
     title: 'Videnstjek',
-    desc: 'Quiz på læringsmålene — gemmes i browseren',
+    desc: 'Quiz på læringsmål + template-begreber',
   },
 ]
 
 export default function Oversigt() {
   return (
     <LessonLayout module="h3">
-      <h1>Struktureret kode i C++ til Arduino</h1>
+      <h1>Struktureret C++ til Arduino (H3)</h1>
       <LessonIntro>
         <p>
-          Når projekter vokser, bliver alt-i-<code>loop()</code> uoverskueligt. H3 handler om at
-          skrive kode, andre (og dig selv) kan læse, genbruge og fejlsøge — med samme disciplin som i
-          større C++-projekter.
+          Pensummet bygger på jeres rigtige projekt-skabelon:{' '}
+          <a href={TEMPLATE_REPO_URL} target="_blank" rel="noreferrer">
+            Mercantech/H3 → Arduino
+          </a>
+          . Oplà IoT Carrier-demoen viser, hvordan professionel filopdeling ser ud i praksis.
         </p>
       </LessonIntro>
 
@@ -71,32 +74,34 @@ export default function Oversigt() {
         ))}
       </ul>
 
-      <h2>Hvorfor struktureret kode?</h2>
+      <h2>Template som facit</h2>
       <div className="why-grid">
         <div className="why-card">
-          <h3>Læsbarhed</h3>
-          <p>Små navngivne dele fortæller intentionen hurtigere end én lang procedure.</p>
+          <h3>main.cpp</h3>
+          <p>Kun wiring — læs, kald, returnér. Ingen spaghetti.</p>
         </div>
         <div className="why-card">
-          <h3>Færre fejl</h3>
-          <p>Fejl sidder i én funktion eller ét modul — nemmere at isolere og teste.</p>
+          <h3>Moduler</h3>
+          <p>Sensors, display, LEDs, input, WiFi, pure logic — hvert sit .h/.cpp-par.</p>
         </div>
         <div className="why-card">
-          <h3>Genbrug</h3>
+          <h3>types.h</h3>
           <p>
-            <code>blinkLED</code> eller <code>readTemperature</code> kan flytte til næste sketch.
+            Fælles structs som <code>SensorReading</code> uden hardware.
           </p>
         </div>
         <div className="why-card">
-          <h3>Samarbejde</h3>
-          <p>Fælles stil og filopdeling gør det muligt at arbejde flere på samme projekt.</p>
+          <h3>Native test</h3>
+          <p>
+            <code>temperature_color</code> testes på PC med PlatformIO.
+          </p>
         </div>
       </div>
 
       <Callout type="tip">
         <p>
-          Brug <strong>Præsentér</strong> i værktøjslinjen, når du underviser — indholdet splits i
-          slides ved hvert H2.
+          Brug <strong>Præsentér</strong> i værktøjslinjen i undervisningen. Klon templaten, når I
+          skal kode — teorien her forklarer <em>hvorfor</em> den er bygget sådan.
         </p>
       </Callout>
 

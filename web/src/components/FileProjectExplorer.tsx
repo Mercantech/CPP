@@ -26,8 +26,12 @@ export default function FileProjectExplorer({
             type="button"
             className={f.name === current.name ? 'active' : undefined}
             onClick={() => setActive(f.name)}
+            title={f.name}
           >
-            {f.name}
+            {f.name.includes('/') ? f.name.split('/').pop() : f.name}
+            {f.name.includes('/') ? (
+              <span className="file-explorer__path">{f.name}</span>
+            ) : null}
           </button>
         ))}
       </div>
