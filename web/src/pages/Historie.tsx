@@ -111,8 +111,9 @@ export default function Historie() {
               </p>
               <ul>
                 <li>
-                  <strong>Garbage collection</strong> i stedet for manuel <code>new</code>/
-                  <code>delete</code>
+                  <strong>Garbage collection</strong> for managed objekter. Moderne C++ bruger
+                  typisk værdier og RAII til deterministisk oprydning; manuel <code>new</code>/
+                  <code>delete</code> er ikke udgangspunktet i vores H5-forløb.
                 </li>
                 <li>Stærkere runtime (JVM / .NET) i stedet for “bare metal”</li>
                 <li>Ofte mere sikkerhed, mindre lavniveau-kontrol</li>
@@ -177,6 +178,15 @@ export default function Historie() {
         <li>Effektivitet + abstraktion er ikke modsætninger i C++’s design.</li>
         <li>C# og Java står på samme familiære syntaks/idéer, men med managed hukommelse.</li>
         <li>Arduino er din indgang: samme sprogfamilie, konkrete pins og sensorer.</li>
+      </ul>
+      <h2>Det velkendte — og det nye for en C#-elev</h2>
+      <p>De velkendte parenteser kan skjule vigtige forskelle. En lokal C++-variabel af en klassetype er normalt selve objektet, mens en C#-variabel af en class-type indeholder en reference. En C++-reference er et alias for et eksisterende objekt og sørger ikke for, at objektet lever længere. Du skal derfor lære levetid som en del af dit design.</p>
+      <p>Det betyder også, at et C++-objekts destruktor normalt kører, når dets automatiske levetid slutter ved scope-exit. En fil eller en lås kan dermed frigives sammen med det objekt, der ejer den. Det er idéen i RAII, som du undersøger på H5. I C# løser blandt andet <code>using</code> og <code>IDisposable</code> et beslægtet behov for deterministisk ressourcefrigivelse; garbage collection alene er ikke en plan for at lukke filer på det rigtige tidspunkt.</p>
+      <h2>Gå til de oprindelige kilder</h2>
+      <ul>
+        <li><a href="https://www.stroustrup.com/bs_faq.html" target="_blank" rel="noreferrer">Bjarne Stroustrup: FAQ om C++, navnet og historien</a></li>
+        <li><a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rr-raii" target="_blank" rel="noreferrer">C++ Core Guidelines: automatisk ressourcehåndtering med RAII</a></li>
+        <li><a href="https://docs.arduino.cc/arduino-cli/sketch-build-process/" target="_blank" rel="noreferrer">Arduino: sådan omdannes en sketch til et C++-program</a></li>
       </ul>
     </LessonLayout>
   )

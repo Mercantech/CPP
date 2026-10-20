@@ -2,6 +2,7 @@ import {
   useCallback,
   useEffect,
   useId,
+  useRef,
   useState,
   type RefObject,
 } from 'react'
@@ -75,6 +76,16 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
   const [slides, setSlides] = useState<Slide[]>([])
   const [index, setIndex] = useState(0)
   const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const previousFocus = document.activeElement
+    dialogRef.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus()
+    return () => {
+      if (previousFocus instanceof HTMLElement) previousFocus.focus({ preventScroll: true })
+    }
+  }, [open])
 
   const close = useCallback(() => {
     setLightbox(null)
@@ -108,6 +119,22 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
 
     const onKey = (e: KeyboardEvent) => {
       if (lightbox || document.querySelector('[data-image-lightbox]')) return
+
+      if (e.key === 'Tab') {
+        const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+          'button:not(:disabled):not([tabindex="-1"]), a[href], summary, input, select, textarea',
+        ) ?? []).filter((element) => element.getClientRects().length > 0)
+        const first = focusable[0]
+        const last = focusable.at(-1)
+        if (e.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+          e.preventDefault()
+          last?.focus()
+        } else if (!e.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+          e.preventDefault()
+          first?.focus()
+        }
+        return
+      }
 
       if (e.key === 'Escape') {
         e.preventDefault()
@@ -190,6 +217,7 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
       {open && slide
         ? createPortal(
             <div
+              ref={dialogRef}
               className="present-mode"
               role="dialog"
               aria-modal="true"

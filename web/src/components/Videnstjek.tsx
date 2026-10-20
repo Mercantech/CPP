@@ -9,26 +9,24 @@ import {
 
 function QuestionCard({
   q,
-  initial,
+  selected,
   onAnswered,
 }: {
   q: QuizQuestion
-  initial?: number
-  onAnswered: () => void
+  selected?: number
+  onAnswered: (optionIndex: number) => void
 }) {
-  const [selected, setSelected] = useState<number | undefined>(initial)
   const answered = selected !== undefined
+  const feedbackId = `quiz-${q.id}-feedback`
 
   function choose(i: number) {
     if (answered) return
-    setSelected(i)
-    saveQuizAnswer(q.id, i)
-    onAnswered()
+    onAnswered(i)
   }
 
   return (
-    <div className="quiz">
-      <p className="quiz__q">{q.question}</p>
+    <section className="quiz" aria-labelledby={`quiz-${q.id}-question`}>
+      <p className="quiz__q" id={`quiz-${q.id}-question`}>{q.question}</p>
       <div className="quiz__options">
         {q.options.map((opt, i) => {
           let cls = ''
@@ -41,7 +39,9 @@ function QuestionCard({
               key={opt}
               type="button"
               className={cls || undefined}
-              disabled={answered}
+              aria-pressed={selected === i}
+              aria-disabled={answered}
+              aria-describedby={answered ? feedbackId : undefined}
               onClick={() => choose(i)}
             >
               {opt}
@@ -49,25 +49,26 @@ function QuestionCard({
           )
         })}
       </div>
-      {answered ? (
-        <div
-          className={
-            selected === q.correctIndex
+      <div
+        id={feedbackId}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className={answered
+          ? selected === q.correctIndex
               ? 'quiz__feedback quiz__feedback--ok'
               : 'quiz__feedback quiz__feedback--bad'
-          }
-        >
-          {selected === q.correctIndex ? 'Korrekt. ' : 'Ikke helt. '}
-          {q.explanation}
-        </div>
-      ) : null}
-    </div>
+          : undefined}
+      >
+        {answered ? <>{selected === q.correctIndex ? 'Korrekt. ' : 'Ikke helt. '}{q.explanation}</> : null}
+      </div>
+    </section>
   )
 }
 
 export default function Videnstjek() {
   const [answers, setAnswers] = useState(() => loadQuizAnswers())
-  const [, bump] = useState(0)
+  const [storageMessage, setStorageMessage] = useState('')
 
   const score = useMemo(() => {
     let correct = 0
@@ -80,15 +81,22 @@ export default function Videnstjek() {
     return { correct, answered, total: quizQuestions.length }
   }, [answers])
 
-  function refresh() {
-    setAnswers(loadQuizAnswers())
-    bump((n) => n + 1)
+  function answer(id: string, optionIndex: number) {
+    const question = quizQuestions.find((q) => q.id === id)
+    if (!question || answers[id] !== undefined || !Number.isInteger(optionIndex)
+      || optionIndex < 0 || optionIndex >= question.options.length) return
+    // React state is authoritative for this visit, even if browser storage fails.
+    setAnswers((current) => ({ ...current, [id]: optionIndex }))
+    if (!saveQuizAnswer(id, optionIndex)) {
+      setStorageMessage('Browseren kunne ikke gemme svaret. Dine svar bevares i denne åbne visning.')
+    }
   }
 
   function reset() {
-    clearQuizAnswers()
+    const cleared = clearQuizAnswers()
     setAnswers({})
-    bump((n) => n + 1)
+    setStorageMessage(cleared ? 'Videnstjekket er nulstillet. Du kan svare igen.'
+      : 'Videnstjekket er nulstillet her. Browseren kunne ikke rydde de tidligere gemte svar.')
   }
 
   return (
@@ -100,26 +108,25 @@ export default function Videnstjek() {
         </p>
         <p>
           {score.answered === 0
-            ? 'Besvar spørgsmålene nedenfor — svar gemmes lokalt i browseren.'
+            ? 'Besvar spørgsmålene nedenfor — svar gemmes lokalt, når browseren tillader det.'
             : score.answered < score.total
               ? `${score.answered} af ${score.total} besvaret.`
               : score.correct === score.total
                 ? 'Alle rigtige — stærkt arbejde!'
                 : 'Gennemgå forklaringerne og prøv igen.'}
         </p>
-        {score.answered > 0 ? (
-          <button type="button" className="btn btn--ghost" onClick={reset}>
-            Nulstil videnstjek
-          </button>
-        ) : null}
+        <button type="button" className="btn btn--ghost" onClick={reset}>
+          Nulstil videnstjek
+        </button>
+        <p role="status" aria-live="polite" aria-atomic="true">{storageMessage}</p>
       </div>
 
       {quizQuestions.map((q) => (
         <QuestionCard
           key={q.id}
           q={q}
-          initial={answers[q.id]}
-          onAnswered={refresh}
+          selected={answers[q.id]}
+          onAnswered={(optionIndex) => answer(q.id, optionIndex)}
         />
       ))}
     </div>
