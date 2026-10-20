@@ -1,4 +1,4 @@
-# C++ Værkstedet
+# C++ · Pensum til H3 og H5
 
 C++ til H3 og H5 — et dansk læringsværksted med dybe forklaringer, praktiske opgaver og interaktive modeller.
 

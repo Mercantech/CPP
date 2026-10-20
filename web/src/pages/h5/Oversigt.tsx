@@ -8,11 +8,11 @@ export default function Oversigt() {
   return (
     <LessonLayout module="h5">
       <p className="eyebrow">H5 · Desktop · C++20</p>
-      <h1>Fra kode, der virker, til C++ du kan stole på</h1>
+      <h1>Moderne C++</h1>
       <p className="lead">
-        Du har opdelt Arduino-kode i funktioner og filer. Nu flytter vi værkstedet over på din
-        computer: rigtige objekter, tydeligt ejerskab, standardbiblioteket og en sensorlog, der
-        kan overleve både dårlige input og din makkers næste ændring.
+        Du har opdelt Arduino-kode i funktioner og filer. Her arbejder du videre på din
+        computer med objekter, ejerskab og standardbiblioteket i C++20. Undervejs bygger du
+        en sensorlog, som behandler målinger og håndterer ugyldige input.
       </p>
       <Callout type="info">
         <p>
@@ -23,7 +23,7 @@ export default function Oversigt() {
         </p>
       </Callout>
 
-      <h2>Din mission: byg et lille kontrolrum</h2>
+      <h2>Forløbets projekt: en sensorlog</h2>
       <p>
         En skole vil følge temperaturerne i sine værksteder. Data kommer fra sensorer, men
         analyseprogrammet skal kunne udvikles uden tilsluttet hardware. Din opgave er at indlæse
@@ -38,7 +38,7 @@ export default function Oversigt() {
         <li><span className="objectives__id">05</span><span>Dokumentér din løsning med konkrete input, output og grænsetilfælde.</span></li>
       </ul>
 
-      <h2>Ruten gennem H5</h2>
+      <h2>Forløbets emner</h2>
       <p>
         Planlæg cirka 15–22 timers arbejde inklusive projekt. Tiderne er vejledende; tag
         forklaringspauserne alvorligt. Du er klar til næste trin, når du kan forklare dit valg
@@ -150,7 +150,7 @@ cmake --build build --config Debug
         udvikler og reviewer: revieweren spørger til gyldige tilstande, ejerskab og tomme datasæt.
         Byt roller efter hvert checkpoint.
       </p>
-      <Callout type="tip"><p>Dit stærkeste afleveringsbevis er en lille ændring, du kan lave og forklare live. Start med <Link to="/h5/objekter">objekter med regler</Link>.</p></Callout>
+      <Callout type="tip"><p>Øv dig i at lave en lille ændring og forklare, hvordan den påvirker programmet. Fortsæt med <Link to="/h5/objekter">objekter med regler</Link>.</p></Callout>
 
       <h2>Kilder og værktøjsreferencer</h2>
       <ul>
