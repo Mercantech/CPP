@@ -1,23 +1,23 @@
 :root {
-  --ink: #090e18;
+  --ink: #070f1a;
   --ink-2: #0a1628;
   --panel: #0e1c32;
   --panel-2: #132440;
   --border: rgba(120, 170, 220, 0.16);
   --text: #e8f0fa;
-  --muted: #acb9cc;
+  --muted: #8aa0b8;
   --cpp: #00599c;
-  --cpp-bright: #61b9ff;
+  --cpp-bright: #0598d6;
   --cyan: #4fd1c5;
-  --warm: #f7ce55;
+  --warm: #e8a838;
   --ok: #3ecf8e;
   --warn: #e8a838;
   --danger: #e85d5d;
   --code-bg: #061018;
   --font-display: 'Outfit', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --radius: 12px;
+  --radius: 10px;
   --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-  --max: 1280px;
-  --header-h: 78px;
+  --max: 1120px;
+  --header-h: 64px;
 }

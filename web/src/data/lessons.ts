@@ -1,12 +1,10 @@
-export type LessonModule = 'h3' | 'h5' | 'historie'
+export type LessonModule = 'h3' | 'historie'
 
 export type LessonNavItem = {
   slug: string
   label: string
   path: string
   num?: string
-  duration?: string
-  description?: string
 }
 
 export type LessonModuleNav = {
@@ -25,27 +23,14 @@ export const lessonModules: LessonModuleNav[] = [
     module: 'h3',
     title: 'H3 · Struktureret C++',
     items: [
-      { slug: 'oversigt', label: 'Start her', path: '/h3', num: '00', description: 'Dit værksted, dine mål og dit første program.' },
-      { slug: 'funktioner', label: 'Funktioner', path: '/h3/funktioner', num: '01', duration: '45–60 min', description: 'Fra gentaget kode til klare kontrakter og små byggesten.' },
-      { slug: 'datatyper', label: 'Datatyper & bits', path: '/h3/datatyper', num: '02', duration: '45–60 min', description: 'Vælg typer med omtanke. Undersøg størrelser, præcision og konvertering.' },
-      { slug: 'kontrolflow', label: 'Kontrolflow & arrays', path: '/h3/kontrolflow', num: '03', duration: '45–60 min', description: 'Betingelser, løkker og flere målinger uden gentagelser.' },
-      { slug: 'scope', label: 'Scope & levetid', path: '/h3/scope', num: '04', duration: '30–45 min', description: 'Hvem kan se en variabel, og hvor længe findes den?' },
-      { slug: 'filer', label: 'Headers & .cpp', path: '/h3/filer', num: '05', duration: '45–60 min', description: 'Følg din kode fra deklaration til compiler og linker.' },
-      { slug: 'kodestandarder', label: 'Kode med omtanke', path: '/h3/kodestandarder', num: '06', duration: '30–45 min', description: 'Navne, fejl og tidsstyring, som din makker kan forstå.' },
-      { slug: 'refaktorering', label: 'Refaktorering', path: '/h3/refaktorering', num: '07', duration: '45–60 min', description: 'Giv fungerende kode en bedre struktur, ét trin ad gangen.' },
-      { slug: 'mission', label: 'Mission: Signalstation', path: '/h3/mission', num: '08', duration: '2–3 timer', description: 'Saml det hele i en station med knap, LED og tilstande.' },
-      { slug: 'videnstjek', label: 'Videnstjek', path: '/h3/videnstjek', num: '09', duration: '15–25 min', description: 'Forudsig adfærd og forklar dine valg.' },
-    ],
-  },
-  {
-    module: 'h5',
-    title: 'H5 · Moderne C++',
-    items: [
-      { slug: 'oversigt', label: 'Start her', path: '/h5', num: '00', duration: '1–2 timer' },
-      { slug: 'objekter', label: 'Objekter & invariants', path: '/h5/objekter', num: '01', duration: '3–4 timer' },
-      { slug: 'hukommelse', label: 'Hukommelse & RAII', path: '/h5/hukommelse', num: '02', duration: '3–4 timer' },
-      { slug: 'standardbibliotek', label: 'Standardbiblioteket', path: '/h5/standardbibliotek', num: '03', duration: '3–4 timer' },
-      { slug: 'projekt', label: 'Projekt: Sensorlog', path: '/h5/projekt', num: '04', duration: '5–8 timer' },
+      { slug: 'oversigt', label: 'Oversigt', path: '/h3', num: '01' },
+      { slug: 'funktioner', label: 'Funktioner', path: '/h3/funktioner', num: '02' },
+      { slug: 'datatyper', label: 'Datatyper', path: '/h3/datatyper', num: '03' },
+      { slug: 'scope', label: 'Global vs lokal', path: '/h3/scope', num: '04' },
+      { slug: 'filer', label: 'Filopdeling', path: '/h3/filer', num: '05' },
+      { slug: 'kodestandarder', label: 'Kodestandarder', path: '/h3/kodestandarder', num: '06' },
+      { slug: 'refaktorering', label: 'Refaktorering', path: '/h3/refaktorering', num: '07' },
+      { slug: 'videnstjek', label: 'Videnstjek', path: '/h3/videnstjek', num: '08' },
     ],
   },
 ]
@@ -63,7 +48,7 @@ export const h3Objectives = [
   },
   {
     id: '2',
-    text: 'Jeg kan vælge og begrunde datatyper (int, long, float, bool, char) ud fra værdier og den konkrete platform',
+    text: 'Jeg kan anvende korrekte datatyper (int, long, float, boolean, char) baseret på det data jeg skal arbejde med',
   },
   {
     id: '3',
@@ -76,13 +61,5 @@ export const h3Objectives = [
   {
     id: '5',
     text: 'Jeg kan følge kodestandarder og navngivningskonventioner for at skrive professionel Arduino-kode',
-  },
-  {
-    id: '6',
-    text: 'Jeg kan bruge betingelser, løkker og arrays uden at læse uden for arrayets grænser',
-  },
-  {
-    id: '7',
-    text: 'Jeg kan bygge et responsivt program med tilstande, knaphændelser og unsigned tidsforskelle fra millis()',
   },
 ]
