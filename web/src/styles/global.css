@@ -19,6 +19,24 @@ body {
   line-height: 1.65;
   color: var(--text);
   background: var(--ink);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 10% -10%, rgba(0, 89, 156, 0.35), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 90% 0%, rgba(79, 209, 197, 0.12), transparent 50%),
+    linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 40%, #06101c 100%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image:
+    linear-gradient(rgba(79, 209, 197, 0.6) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 209, 197, 0.6) 1px, transparent 1px);
+  background-size: 48px 48px;
+  z-index: 0;
 }
 
 #root {
@@ -241,6 +259,96 @@ code {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: calc(100vh - var(--header-h) - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem 0 4rem;
+  overflow: hidden;
+}
+
+.hero__brand {
+  font-size: clamp(4.5rem, 16vw, 9rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  margin: 0 0 0.35em;
+  background: linear-gradient(135deg, #fff 20%, var(--cpp-bright) 55%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: heroIn 0.9s ease both;
+}
+
+.hero__title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5em;
+  max-width: 18ch;
+  animation: heroIn 0.9s 0.1s ease both;
+}
+
+.hero__lead {
+  font-size: 1.15rem;
+  max-width: 36ch;
+  margin: 0;
+  animation: heroIn 0.9s 0.2s ease both;
+}
+
+.hero .cta-row {
+  animation: heroIn 0.9s 0.3s ease both;
+}
+
+.hero__glow {
+  position: absolute;
+  right: -10%;
+  top: 10%;
+  width: min(480px, 70vw);
+  height: min(480px, 70vw);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 89, 156, 0.45), transparent 70%);
+  pointer-events: none;
+  animation: pulseGlow 6s ease-in-out infinite;
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* Lesson shell */
@@ -1052,6 +1160,41 @@ code {
   text-align: center;
   font-size: 0.75rem;
   color: var(--muted);
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.hub-link {
+  display: block;
+  padding: 1.35rem 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(14, 28, 50, 0.65);
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.hub-link:hover {
+  border-color: var(--cpp-bright);
+  transform: translateY(-2px);
+}
+
+.hub-link h2 {
+  margin: 0 0 0.35rem;
+  border: none;
+  padding: 0;
+  font-size: 1.35rem;
+  color: #fff;
+}
+
+.hub-link p {
+  margin: 0;
+  font-size: 0.95rem;
 }
 
 .datatype-table {

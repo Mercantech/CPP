@@ -27,8 +27,8 @@ export default function Layout() {
       <header className="site-header">
         <div className="site-header__inner">
           <NavLink to="/" className="site-logo" end>
-            <img src="/history/cplusplus.svg" alt="" width="30" height="30" />
-            <span className="site-logo__text">C++<small>H3 og H5 · Mercantec</small></span>
+            <img src="/brand/cplusplus.svg" alt="" width="32" height="32" />
+            <span className="site-logo__text">C++<small>VÆRKSTEDET</small></span>
           </NavLink>
           <nav aria-label="Hovednavigation">
             <ul className="site-nav">
@@ -52,11 +52,11 @@ export default function Layout() {
       </main>
       <footer className="site-footer">
         <p>
-          C++ · H3 og H5 · Mercantec ·{' '}
+          <span className="footer-code">return curiosity++;</span> C++ til H3 og H5 · Mercantec ·{' '}
           <a href="https://cpp.mercantec.tech">cpp.mercantec.tech</a>
         </p>
       </footer>
-      <p className="site-footer__note">Fremskridt og quizsvar gemmes i denne browser.</p>
+      <p className="site-footer__note">Byg. Undersøg. Forstå. · Fremskridt og quizsvar gemmes kun i denne browser.</p>
     </ProgressProvider>
   )
 }
