@@ -1,5 +1,5 @@
 import { useRef, type ReactNode } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { getModuleNav, type LessonModule } from '../data/lessons'
 import PresentMode from './PresentMode'
 
@@ -38,7 +38,12 @@ export default function LessonLayout({ module, children }: LessonLayoutProps) {
       </aside>
       <div className="lesson-main-wrap">
         <div className="lesson-toolbar">
-          <PresentMode contentRef={contentRef} />
+          {module === 'h3' ? (
+            <Link className="btn btn--primary" to="/h3/praesentation">
+              Hele H3-slideshow
+            </Link>
+          ) : null}
+          <PresentMode contentRef={contentRef} buttonLabel="Præsentér side" />
         </div>
         <article ref={contentRef} className="lesson-main lesson prose">
           {children}

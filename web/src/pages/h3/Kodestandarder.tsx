@@ -4,9 +4,9 @@ import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { TEMPLATE_REPO_URL } from '../../data/projects'
 
-export default function Kodestandarder() {
+export function KodestandarderContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Kodestandarder (H3-templaten)</h1>
       <LessonIntro>
         <p>
@@ -137,6 +137,15 @@ unsigned long lastDisplayUpdateMs = 0;
         </li>
         <li>Pure logic kan testes med <code>pio test -e native</code> når det giver mening</li>
       </ul>
+    </>
+  )
+}
+
+export default function Kodestandarder() {
+  return (
+    <LessonLayout module="h3">
+      <KodestandarderContent />
     </LessonLayout>
   )
 }
+

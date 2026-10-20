@@ -7,6 +7,7 @@ import Filer from './pages/h3/Filer'
 import Funktioner from './pages/h3/Funktioner'
 import Kodestandarder from './pages/h3/Kodestandarder'
 import Oversigt from './pages/h3/Oversigt'
+import Praesentation from './pages/h3/Praesentation'
 import Refaktorering from './pages/h3/Refaktorering'
 import Scope from './pages/h3/Scope'
 import VidenstjekPage from './pages/h3/VidenstjekPage'
@@ -20,6 +21,7 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="historie" element={<Historie />} />
           <Route path="h3" element={<Oversigt />} />
+          <Route path="h3/praesentation" element={<Praesentation />} />
           <Route path="h3/funktioner" element={<Funktioner />} />
           <Route path="h3/datatyper" element={<Datatyper />} />
           <Route path="h3/scope" element={<Scope />} />

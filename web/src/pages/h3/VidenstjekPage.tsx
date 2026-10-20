@@ -2,9 +2,9 @@ import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import Videnstjek from '../../components/Videnstjek'
 
-export default function VidenstjekPage() {
+export function VidenstjekContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Videnstjek</h1>
       <LessonIntro>
         <p>
@@ -15,6 +15,15 @@ export default function VidenstjekPage() {
 
       <h2>Spørgsmål</h2>
       <Videnstjek />
+    </>
+  )
+}
+
+export default function VidenstjekPage() {
+  return (
+    <LessonLayout module="h3">
+      <VidenstjekContent />
     </LessonLayout>
   )
 }
+

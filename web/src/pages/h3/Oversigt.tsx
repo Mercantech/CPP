@@ -7,6 +7,12 @@ import { TEMPLATE_REPO_URL } from '../../data/projects'
 
 const route = [
   {
+    to: '/h3/praesentation',
+    num: '▶',
+    title: 'Hele H3-slideshow',
+    desc: 'Samlet præsentation af hele pensummet i én gennemgang',
+  },
+  {
     to: '/h3/funktioner',
     num: '02',
     title: 'Funktioner',
@@ -50,9 +56,9 @@ const route = [
   },
 ]
 
-export default function Oversigt() {
+export function OversigtContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Struktureret C++ til Arduino (H3)</h1>
       <LessonIntro>
         <p>
@@ -100,8 +106,9 @@ export default function Oversigt() {
 
       <Callout type="tip">
         <p>
-          Brug <strong>Præsentér</strong> i værktøjslinjen i undervisningen. Klon templaten, når I
-          skal kode — teorien her forklarer <em>hvorfor</em> den er bygget sådan.
+          Undervis hele pensummet i ét hug via{' '}
+          <Link to="/h3/praesentation">Hele H3-slideshow</Link> — eller brug{' '}
+          <strong>Præsentér side</strong> til kun denne lektion. Klon templaten, når I skal kode.
         </p>
       </Callout>
 
@@ -120,6 +127,15 @@ export default function Oversigt() {
           </Link>
         ))}
       </div>
+    </>
+  )
+}
+
+export default function Oversigt() {
+  return (
+    <LessonLayout module="h3">
+      <OversigtContent />
     </LessonLayout>
   )
 }
+

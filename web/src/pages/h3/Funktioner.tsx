@@ -4,9 +4,9 @@ import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { TEMPLATE_REPO_URL } from '../../data/projects'
 
-export default function Funktioner() {
+export function FunktionerContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Funktioner — modulets offentlige API</h1>
       <LessonIntro>
         <p>
@@ -102,6 +102,15 @@ SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier) {
           Udtræk en funktion (og gerne et modul).
         </p>
       </Callout>
+    </>
+  )
+}
+
+export default function Funktioner() {
+  return (
+    <LessonLayout module="h3">
+      <FunktionerContent />
     </LessonLayout>
   )
 }
+

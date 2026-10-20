@@ -5,9 +5,9 @@ import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { oplaProject, TEMPLATE_REPO_URL } from '../../data/projects'
 
-export default function Filer() {
+export function FilerContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Filopdeling: H3 Oplà-templaten</h1>
       <LessonIntro>
         <p>
@@ -244,6 +244,15 @@ pio test -e native         # unit tests på PC (temperature_color)
           github.com/Mercantech/H3/tree/main/Arduino
         </a>
       </p>
+    </>
+  )
+}
+
+export default function Filer() {
+  return (
+    <LessonLayout module="h3">
+      <FilerContent />
     </LessonLayout>
   )
 }
+

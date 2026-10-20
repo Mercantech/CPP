@@ -4,9 +4,9 @@ import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { TEMPLATE_REPO_URL } from '../../data/projects'
 
-export default function Scope() {
+export function ScopeContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Scope — synlighed og levetid</h1>
       <LessonIntro>
         <p>
@@ -107,6 +107,15 @@ void loop() {
         <li>Delt betydning på tværs af moduler: struct i <code>types.h</code></li>
         <li>Midlertidige beregninger: lokale i funktionen</li>
       </ul>
+    </>
+  )
+}
+
+export default function Scope() {
+  return (
+    <LessonLayout module="h3">
+      <ScopeContent />
     </LessonLayout>
   )
 }
+

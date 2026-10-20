@@ -23,6 +23,7 @@ export const lessonModules: LessonModuleNav[] = [
     module: 'h3',
     title: 'H3 · Struktureret C++',
     items: [
+      { slug: 'praesentation', label: 'Hele H3 (slideshow)', path: '/h3/praesentation', num: '▶' },
       { slug: 'oversigt', label: 'Oversigt', path: '/h3', num: '01' },
       { slug: 'funktioner', label: 'Funktioner', path: '/h3/funktioner', num: '02' },
       { slug: 'datatyper', label: 'Datatyper', path: '/h3/datatyper', num: '03' },

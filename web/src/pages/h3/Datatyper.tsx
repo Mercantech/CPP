@@ -3,9 +3,9 @@ import CodeBlock from '../../components/CodeBlock'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 
-export default function Datatyper() {
+export function DatatyperContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Datatyper i Arduino C++</h1>
       <LessonIntro>
         <p>
@@ -201,6 +201,15 @@ void loop() {
           RGB-kanaler i <code>temperatureToRgb</code> → <code>int</code> (0–255)
         </li>
       </ul>
+    </>
+  )
+}
+
+export default function Datatyper() {
+  return (
+    <LessonLayout module="h3">
+      <DatatyperContent />
     </LessonLayout>
   )
 }
+

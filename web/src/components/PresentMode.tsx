@@ -6,44 +6,16 @@ import {
   type RefObject,
 } from 'react'
 import { createPortal } from 'react-dom'
+import { buildSlides, type Slide } from '../lib/buildSlides'
 import ImageLightbox, { type LightboxImage } from './ImageLightbox'
 
 type PresentModeProps = {
   contentRef: RefObject<HTMLElement | null>
-}
-
-type Slide = {
-  html: string
-  title: string
-}
-
-function buildSlides(root: HTMLElement): Slide[] {
-  const kids = Array.from(root.children).filter(
-    (el) => !(el instanceof HTMLElement && el.classList.contains('lesson-toolbar')),
-  )
-  if (kids.length === 0) return []
-
-  const groups: Element[][] = []
-  let current: Element[] = []
-
-  for (const child of kids) {
-    if (child.tagName === 'H2') {
-      if (current.length) groups.push(current)
-      current = [child]
-    } else {
-      current.push(child)
-    }
-  }
-  if (current.length) groups.push(current)
-
-  return groups.map((nodes, index) => {
-    const titleEl =
-      nodes.find((n) => n.tagName === 'H1' || n.tagName === 'H2') ?? nodes[0]
-    const title =
-      titleEl?.textContent?.trim() || (index === 0 ? 'Intro' : `Slide ${index + 1}`)
-    const html = nodes.map((n) => (n as HTMLElement).outerHTML).join('')
-    return { html, title }
-  })
+  /** Start slideshow on mount (used by full H3 deck). */
+  autoOpen?: boolean
+  buttonLabel?: string
+  /** Hide individual dots when the deck is long. */
+  compactChrome?: boolean
 }
 
 function imageFromClickTarget(target: EventTarget | null): LightboxImage | null {
@@ -69,7 +41,12 @@ function imageFromClickTarget(target: EventTarget | null): LightboxImage | null 
   }
 }
 
-export default function PresentMode({ contentRef }: PresentModeProps) {
+export default function PresentMode({
+  contentRef,
+  autoOpen = false,
+  buttonLabel = 'Præsentér',
+  compactChrome = false,
+}: PresentModeProps) {
   const titleId = useId()
   const [open, setOpen] = useState(false)
   const [slides, setSlides] = useState<Slide[]>([])
@@ -95,6 +72,12 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
     setLightbox(null)
     setOpen(true)
   }, [contentRef])
+
+  useEffect(() => {
+    if (!autoOpen) return
+    const t = window.setTimeout(() => openPresent(), 80)
+    return () => window.clearTimeout(t)
+  }, [autoOpen, openPresent])
 
   const go = useCallback(
     (delta: number) => {
@@ -180,12 +163,16 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
   const slide = slides[index]
   const atStart = index <= 0
   const atEnd = index >= slides.length - 1
+  const useCompact = compactChrome || slides.length > 24
+  const progressPct = slides.length ? ((index + 1) / slides.length) * 100 : 0
 
   return (
     <>
-      <button type="button" className="btn btn--ghost present-mode__trigger" onClick={openPresent}>
-        Præsentér
-      </button>
+      {!autoOpen ? (
+        <button type="button" className="btn btn--ghost present-mode__trigger" onClick={openPresent}>
+          {buttonLabel}
+        </button>
+      ) : null}
 
       {open && slide
         ? createPortal(
@@ -196,9 +183,14 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
               aria-labelledby={titleId}
             >
               <div className="present-mode__chrome">
-                <p id={titleId} className="present-mode__title">
-                  {slide.title}
-                </p>
+                <div className="present-mode__titles">
+                  {slide.chapter ? (
+                    <p className="present-mode__chapter">{slide.chapter}</p>
+                  ) : null}
+                  <p id={titleId} className="present-mode__title">
+                    {slide.title}
+                  </p>
+                </div>
                 <p className="present-mode__progress" aria-live="polite">
                   {index + 1} / {slides.length}
                 </p>
@@ -225,6 +217,10 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
                 </div>
               </div>
 
+              <div className="present-mode__bar" aria-hidden="true">
+                <span style={{ width: `${progressPct}%` }} />
+              </div>
+
               <div className="present-mode__stage">
                 <div
                   className="present-mode__slide prose lesson"
@@ -233,24 +229,26 @@ export default function PresentMode({ contentRef }: PresentModeProps) {
               </div>
 
               <p className="present-mode__hint">
-                ← → for slides · Esc for luk · F for fuldskærm
+                ← → for slides · Esc for luk · F for fuldskærm · Home/End til start/slut
               </p>
 
-              <div className="present-mode__dots" aria-hidden="true">
-                {slides.map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={
-                      i === index
-                        ? 'present-mode__dot present-mode__dot--active'
-                        : 'present-mode__dot'
-                    }
-                    onClick={() => setIndex(i)}
-                    tabIndex={-1}
-                  />
-                ))}
-              </div>
+              {!useCompact ? (
+                <div className="present-mode__dots" aria-hidden="true">
+                  {slides.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={
+                        i === index
+                          ? 'present-mode__dot present-mode__dot--active'
+                          : 'present-mode__dot'
+                      }
+                      onClick={() => setIndex(i)}
+                      tabIndex={-1}
+                    />
+                  ))}
+                </div>
+              ) : null}
             </div>,
             document.body,
           )

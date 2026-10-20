@@ -96,9 +96,9 @@ void loop() {
 }
 `
 
-export default function Refaktorering() {
+export function RefaktoreringContent() {
   return (
-    <LessonLayout module="h3">
+    <>
       <h1>Praktisk refaktorering</h1>
       <LessonIntro>
         <p>
@@ -157,6 +157,15 @@ export default function Refaktorering() {
           .
         </p>
       </Callout>
+    </>
+  )
+}
+
+export default function Refaktorering() {
+  return (
+    <LessonLayout module="h3">
+      <RefaktoreringContent />
     </LessonLayout>
   )
 }
+

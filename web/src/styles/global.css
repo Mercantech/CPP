@@ -421,6 +421,8 @@ code {
 .lesson-toolbar {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
@@ -1020,11 +1022,97 @@ code {
   background: rgba(10, 22, 40, 0.95);
 }
 
-.present-mode__title {
+.present-mode__titles {
   flex: 1;
+  min-width: 0;
+}
+
+.present-mode__chapter {
+  margin: 0 0 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cyan);
+}
+
+.present-mode__title {
   margin: 0;
   font-weight: 700;
   color: #fff;
+}
+
+.present-mode__bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.present-mode__bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--cpp), var(--cyan));
+  transition: width 0.2s ease;
+}
+
+.deck-page {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.deck-page__banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.deck-page__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin: 0 0 0.5rem;
+}
+
+.deck-page__heading {
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+}
+
+.deck-page__lead {
+  margin: 0;
+  max-width: 48ch;
+}
+
+.deck-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.deck-page__content {
+  /* Full curriculum lives here for slide extraction; keep readable if slideshow closed */
+}
+
+.deck-chapter {
+  margin-top: 2.5rem !important;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius);
+  background: rgba(0, 89, 156, 0.28);
+  color: #fff;
+  font-size: 1.35rem !important;
+}
+
+.deck-section > .deck-chapter {
+  margin-top: 2.75rem !important;
+}
+
+.present-mode__slide .deck-chapter {
+  border-top: 1px solid var(--border) !important;
 }
 
 .present-mode__progress {
