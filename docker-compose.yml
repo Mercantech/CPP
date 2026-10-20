@@ -1,0 +1,19 @@
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - cpp-web
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.services.cpp-web.loadbalancer.server.port=3000
+
+networks:
+  default:
+    name: dokploy-network
+    external: true

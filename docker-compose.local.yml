@@ -1,0 +1,14 @@
+# Lokal: undgår afhængighed af ekstern dokploy-network
+services:
+  web:
+    ports:
+      - "3000:3000"
+    networks:
+      - local
+
+networks:
+  default:
+    external: false
+    name: cpp-local
+  local:
+    driver: bridge
