@@ -75,7 +75,7 @@ export const historyEras: HistoryEra[] = [
     ],
     tags: ['Bjarne Stroustrup', 'Bell Labs'],
     image: {
-      src: '/history/stroustrup.jpg',
+      src: '/history/bjarnestroustrup.jpg',
       alt: 'Bjarne Stroustrup',
       caption: 'Bjarne Stroustrup — designer af C++',
       sourceUrl: 'https://da.wikipedia.org/wiki/Fil:BjarneStroustrup.jpg',
