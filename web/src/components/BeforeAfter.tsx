@@ -7,6 +7,9 @@ type BeforeAfterProps = {
   language?: string
   beforeNotes?: ReactNode
   afterNotes?: ReactNode
+  beforeFilename?: string
+  afterFilename?: string
+  split?: boolean
 }
 
 export default function BeforeAfter({
@@ -15,8 +18,32 @@ export default function BeforeAfter({
   language = 'cpp',
   beforeNotes,
   afterNotes,
+  beforeFilename = 'before.cpp',
+  afterFilename = 'after.cpp',
+  split = false,
 }: BeforeAfterProps) {
   const [mode, setMode] = useState<'before' | 'after'>('before')
+
+  if (split) {
+    return (
+      <div className="before-after before-after--split">
+        <div className="before-after__pane">
+          <div className="before-after__pane-label">Før — ustruktureret</div>
+          <CodeBlock language={language} filename={beforeFilename}>
+            {before}
+          </CodeBlock>
+          {beforeNotes ? <div className="before-after__notes">{beforeNotes}</div> : null}
+        </div>
+        <div className="before-after__pane">
+          <div className="before-after__pane-label">Efter — struktureret</div>
+          <CodeBlock language={language} filename={afterFilename}>
+            {after}
+          </CodeBlock>
+          {afterNotes ? <div className="before-after__notes">{afterNotes}</div> : null}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="before-after">
@@ -40,7 +67,12 @@ export default function BeforeAfter({
           Efter — struktureret
         </button>
       </div>
-      <CodeBlock language={language}>{mode === 'before' ? before : after}</CodeBlock>
+      <CodeBlock
+        language={language}
+        filename={mode === 'before' ? beforeFilename : afterFilename}
+      >
+        {mode === 'before' ? before : after}
+      </CodeBlock>
       {(mode === 'before' ? beforeNotes : afterNotes) ? (
         <div className="before-after__notes">
           {mode === 'before' ? beforeNotes : afterNotes}

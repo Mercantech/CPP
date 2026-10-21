@@ -65,6 +65,22 @@ export function OversigtContent() {
         </p>
       </LessonIntro>
 
+      <div className="workbench-teaser">
+        <div className="workbench-teaser__copy">
+          <h3>Workbench-lektioner</h3>
+          <p>
+            H3 er bygget som en IDE-oplevelse: kode med filnavne, memory-animationer der viser SRAM
+            og stack frames, og PresentMode der kæder hele pensummet. Start med Funktioner — eller
+            hop direkte til Datatyper for wow-demoerne.
+          </p>
+        </div>
+        <pre className="workbench-teaser__code" aria-hidden>{`// C# → C++ (Arduino)
+// string  ≈  String  (forsigtigt)
+//          eller char buf[N];
+int raw = analogRead(A0);
+unsigned long t = millis();`}</pre>
+      </div>
+
       <h2>Læringsmål</h2>
       <ul className="objectives">
         {h3Objectives.map((o) => (

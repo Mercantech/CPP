@@ -4,6 +4,8 @@ export type QuizQuestion = {
   options: string[]
   correctIndex: number
   explanation: string
+  codeSnippet?: string
+  codeFilename?: string
 }
 
 export const quizQuestions: QuizQuestion[] = [
@@ -103,6 +105,56 @@ export const quizQuestions: QuizQuestion[] = [
     ],
     correctIndex: 1,
     explanation: 'config.h er safe to commit; secrets hører i secrets.h som er gitignored.',
+  },
+  {
+    id: 'q9',
+    question: 'Hvad er den vigtigste forskel mellem char label[8] og Arduino String?',
+    options: [
+      'char[] bruger heap; String bruger kun stack',
+      'char[] er en fast buffer (C-streng); String allokerer dynamisk på heap',
+      'De er præcis det samme som C# string',
+      'String fylder altid præcis 8 bytes',
+    ],
+    correctIndex: 1,
+    explanation:
+      'char[] reserverer fast SRAM. String vokser på heap og kan fragmentere — brug forsigtigt på Uno.',
+    codeSnippet: `char label[8] = "hi";
+String msg = "hi";
+msg += "!!!";`,
+    codeFilename: 'text.cpp',
+  },
+  {
+    id: 'q10',
+    question: 'Hvad sker der med en lokal variabel når funktionen returnerer?',
+    options: [
+      'Den gemmes permanent i EEPROM',
+      'Dens stack-frame poppes — værdien er væk',
+      'Den bliver automatisk global',
+      'GC flytter den til heap',
+    ],
+    correctIndex: 1,
+    explanation:
+      'Lokale lever i call stack. Ved return poppes framen. Globals/statics lever videre.',
+    codeSnippet: `void bump() {
+  int local = 1;  // forsvinder ved return
+  counter += local;
+}`,
+    codeFilename: 'scope.cpp',
+  },
+  {
+    id: 'q11',
+    question: 'Hvilken linje risikerer int-overflow på Uno?',
+    options: [
+      'unsigned long t = millis();',
+      'int x = 30000; x = x + 10000;',
+      'float t = 23.5;',
+      'bool ok = true;',
+    ],
+    correctIndex: 1,
+    explanation: 'Uno-int max er 32767. 40000 folder rundt. Brug long/unsigned long ved behov.',
+    codeSnippet: `int x = 30000;
+x = x + 10000;  // 40000 > 32767`,
+    codeFilename: 'overflow.cpp',
   },
 ]
 

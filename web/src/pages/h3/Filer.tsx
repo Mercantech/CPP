@@ -1,8 +1,11 @@
 import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
 import FileProjectExplorer from '../../components/FileProjectExplorer'
+import IncludeFlowLive from '../../components/IncludeFlowLive'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
+import MemoryStage from '../../components/MemoryStage'
+import { includeFlowDemo } from '../../data/memoryDemos'
 import { oplaProject, TEMPLATE_REPO_URL } from '../../data/projects'
 
 export function FilerContent() {
@@ -143,19 +146,34 @@ export function FilerContent() {
       <FileProjectExplorer files={oplaProject} title="H3/Arduino" />
 
       <h2>Include-flow i templaten</h2>
-      <div className="include-flow" aria-label="Include flow">
-        <span className="include-flow__chip include-flow__chip--active">main.cpp</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">#include "environment_sensors.h"</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">types.h (SensorReading)</span>
-        <span aria-hidden>→</span>
-        <span className="include-flow__chip">environment_sensors.cpp</span>
-      </div>
+      <IncludeFlowLive />
       <p>
         Præprocessoren indsætter headerens tekst. Linker’en finder senere kroppen i den matchende{' '}
         <code>.cpp</code>. Mangler filen i <code>src/</code> → “undefined reference”.
       </p>
+      <MemoryStage demo={includeFlowDemo} />
+
+      <h2>Build-pipeline (kort)</h2>
+      <div className="build-steps">
+        <div className="build-steps__step">
+          <span className="build-steps__n">01</span>
+          <div>
+            <strong>Præprocessor</strong> — <code>#include</code> indsætter headers.
+          </div>
+        </div>
+        <div className="build-steps__step">
+          <span className="build-steps__n">02</span>
+          <div>
+            <strong>Compiler</strong> — hver <code>.cpp</code> bliver til et objektfil.
+          </div>
+        </div>
+        <div className="build-steps__step">
+          <span className="build-steps__n">03</span>
+          <div>
+            <strong>Linker</strong> — limer kald til definitioner → firmware.
+          </div>
+        </div>
+      </div>
 
       <h2>Include guards + forward declaration</h2>
       <p>
@@ -164,7 +182,7 @@ export function FilerContent() {
         trække hele carrier-biblioteket ind — implementationen inkluderer det i{' '}
         <code>.cpp</code>.
       </p>
-      <CodeBlock language="cpp">{`// include/environment_sensors.h
+      <CodeBlock language="cpp" filename="include/environment_sensors.h">{`// include/environment_sensors.h
 #include "types.h"
 class MKRIoTCarrier;  // forward — fuld type først i .cpp
 
@@ -188,7 +206,7 @@ SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier);
         <code>[env:native]</code> i <code>platformio.ini</code> bygge netop den fil og køre Unity-tests
         på PC:
       </p>
-      <CodeBlock language="text">{`pio run -t upload          # firmware til board
+      <CodeBlock language="text" filename="terminal" showLineNumbers={false}>{`pio run -t upload          # firmware til board
 pio test -e native         # unit tests på PC (temperature_color)
 `}</CodeBlock>
       <Callout type="tip">

@@ -2,6 +2,8 @@ import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
+import MemoryStage from '../../components/MemoryStage'
+import { stackFramesDemo } from '../../data/memoryDemos'
 import { TEMPLATE_REPO_URL } from '../../data/projects'
 
 export function ScopeContent() {
@@ -18,6 +20,13 @@ export function ScopeContent() {
           <strong>anonymt namespace</strong> i <code>main.cpp</code> — privat for den fil.
         </p>
       </LessonIntro>
+
+      <h2>Stack frames i aktion</h2>
+      <p>
+        Følg et funktionskald: global bliver, lokal frame pushes/pops. Det er kerneforskellen på
+        levetid — også ift. C#, hvor stack/heap er skjult bag runtime.
+      </p>
+      <MemoryStage demo={stackFramesDemo} />
 
       <h2>To verdener</h2>
       <div className="scope-viz">
@@ -46,7 +55,7 @@ export function ScopeContent() {
       </div>
 
       <h2>Anonymt namespace (fra main.cpp)</h2>
-      <CodeBlock language="cpp">{`namespace {
+      <CodeBlock language="cpp" filename="src/main.cpp">{`namespace {
 bool shakeModeEnabled = false;
 char lastGestureLabel[8] = "-";
 unsigned long lastShakeTimestampMs = 0;
@@ -70,7 +79,7 @@ unsigned long lastDisplayUpdateMs = 0;
         I stedet for mange løse globale floats sender I en struct. Det er stadig “delt data”, men med
         et klart navn og uden skjulte sideeffekter:
       </p>
-      <CodeBlock language="cpp">{`struct SensorReading {
+      <CodeBlock language="cpp" filename="include/types.h">{`struct SensorReading {
   float temperatureCelsius;
   float humidityPercent;
   float pressureKPa;
@@ -82,7 +91,7 @@ renderSensorScreen(carrier, reading, shakeDetected, lastGestureLabel);
 `}</CodeBlock>
 
       <h2>Levetid mellem loop-kald</h2>
-      <CodeBlock language="cpp">{`// Huskes mellem iterationer (anonymt namespace i main)
+      <CodeBlock language="cpp" filename="src/main.cpp" highlightLines={[5, 6, 7]}>{`// Huskes mellem iterationer (anonymt namespace i main)
 unsigned long lastDisplayUpdateMs = 0;
 
 void loop() {

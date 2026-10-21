@@ -1,8 +1,23 @@
+import BeforeAfter from '../../components/BeforeAfter'
 import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
 import { TEMPLATE_REPO_URL } from '../../data/projects'
+
+const spaghettiMain = `void loop() {
+  float t = carrier.Env.readTemperature();
+  float h = carrier.Env.readHumidity();
+  // … 40 linjer display + LED midt i loop …
+  carrier.display.print(t);
+}
+`
+
+const modularMain = `void loop() {
+  const SensorReading reading = readEnvironmentSensors(carrier);
+  renderSensorScreen(carrier, reading, false, lastGestureLabel);
+}
+`
 
 export function FunktionerContent() {
   return (
@@ -20,8 +35,18 @@ export function FunktionerContent() {
         </p>
       </LessonIntro>
 
+      <h2>Fra spaghetti til API</h2>
+      <BeforeAfter
+        before={spaghettiMain}
+        after={modularMain}
+        beforeFilename="main_messy.cpp"
+        afterFilename="src/main.cpp"
+        beforeNotes="Alt i loop — svært at teste og genbruge."
+        afterNotes="loop() wirer kun: læs → render. Logik ligger i moduler."
+      />
+
       <h2>Anatomi</h2>
-      <CodeBlock language="cpp">{`returnType functionName(parameterType parameterName) {
+      <CodeBlock language="cpp" filename="anatomy.cpp">{`returnType functionName(parameterType parameterName) {
   // arbejde
   return value; // hvis ikke void
 }
@@ -32,13 +57,13 @@ export function FunktionerContent() {
         Headeren deklarerer kontrakten. <code>main.cpp</code> kalder den — uden at kende
         carrier-detaljerne.
       </p>
-      <CodeBlock language="cpp">{`// environment_sensors.h
+      <CodeBlock language="cpp" filename="include/environment_sensors.h">{`// environment_sensors.h
 SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier);
 
 // main.cpp (wiring)
 const SensorReading reading = readEnvironmentSensors(carrier);
 `}</CodeBlock>
-      <CodeBlock language="cpp">{`// environment_sensors.cpp
+      <CodeBlock language="cpp" filename="src/environment_sensors.cpp">{`// environment_sensors.cpp
 SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier) {
   SensorReading reading;
   reading.temperatureCelsius = carrier.Env.readTemperature();
@@ -61,7 +86,7 @@ SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier) {
           via referencer
         </li>
       </ul>
-      <CodeBlock language="cpp">{`void temperatureToRgb(float temperatureCelsius, int& red, int& green, int& blue) {
+      <CodeBlock language="cpp" filename="src/temperature_color.cpp">{`void temperatureToRgb(float temperatureCelsius, int& red, int& green, int& blue) {
   if (temperatureCelsius < 15.0f) {
     red = 0;
     green = 50;
@@ -88,7 +113,7 @@ SensorReading readEnvironmentSensors(MKRIoTCarrier& carrier) {
       </p>
 
       <h2>Hold loop() som orkester</h2>
-      <CodeBlock language="cpp">{`void loop() {
+      <CodeBlock language="cpp" filename="src/main.cpp" highlightLines={[3, 4]}>{`void loop() {
   carrier.Buttons.update();
   const SensorReading reading = readEnvironmentSensors(carrier);
   pollGestureLabel(carrier, lastGestureLabel, sizeof(lastGestureLabel));

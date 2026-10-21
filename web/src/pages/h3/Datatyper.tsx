@@ -2,6 +2,8 @@ import Callout from '../../components/Callout'
 import CodeBlock from '../../components/CodeBlock'
 import LessonIntro from '../../components/LessonIntro'
 import LessonLayout from '../../components/LessonLayout'
+import MemoryStage from '../../components/MemoryStage'
+import { bytesFillDemo, charVsStringDemo } from '../../data/memoryDemos'
 
 export function DatatyperContent() {
   return (
@@ -15,6 +17,13 @@ export function DatatyperContent() {
           er praktisk.
         </p>
       </LessonIntro>
+
+      <h2>Se hukommelsen blive fyldt</h2>
+      <p>
+        Tryk Afspil eller bladre — hver linje lander som bytes i en illustrativ SRAM-model (som på
+        tavlen, men animeret).
+      </p>
+      <MemoryStage demo={bytesFillDemo} />
 
       <h2>Heltal</h2>
       <p>
@@ -126,12 +135,22 @@ export function DatatyperContent() {
         </tbody>
       </table>
 
+      <h2>char[] vs String — og C# string</h2>
+      <Callout type="tip">
+        <p>
+          <strong>Fra C#:</strong> <code>string</code> er et managed objekt med GC. I Arduino C++
+          er <code>char[]</code> en fast buffer (C-streng + <code>\0</code>), mens{' '}
+          <code>String</code> minder mere om C# — men uden GC, så heap kan fragmentere.
+        </p>
+      </Callout>
+      <MemoryStage demo={charVsStringDemo} />
+
       <h2>Overflow — den stille fejl</h2>
       <p>
         Når et heltal går uden for sit range, “folder” det rundt. Det giver rare bugs uden
-        compiler-fejl.
+        compiler-fejl. Se også sidste skridt i memory-demoen ovenfor.
       </p>
-      <CodeBlock language="cpp">{`int x = 30000;
+      <CodeBlock language="cpp" filename="overflow.cpp" highlightLines={[2]}>{`int x = 30000;
 x = x + 10000;  // overflow på Uno (int max 32767) → negativt eller forkert tal
 `}</CodeBlock>
       <Callout type="danger">
@@ -143,13 +162,13 @@ x = x + 10000;  // overflow på Uno (int max 32767) → negativt eller forkert t
       </Callout>
 
       <h2>const og literals</h2>
-      <CodeBlock language="cpp">{`const int LED_PIN = 13;           // må ikke ændres
+      <CodeBlock language="cpp" filename="constants.cpp">{`const int LED_PIN = 13;           // må ikke ændres
 const float VREF = 5.0;           // float-literal med .0
 const unsigned long INTERVAL = 1000UL;  // UL = unsigned long
 `}</CodeBlock>
 
       <h2>Eksempel: blandede typer i praksis</h2>
-      <CodeBlock language="cpp">{`const int LED_PIN = 13;
+      <CodeBlock language="cpp" filename="mixed_types.cpp">{`const int LED_PIN = 13;
 const int SENSOR_PIN = A0;
 
 unsigned long lastUpdate = 0;
@@ -172,7 +191,7 @@ void loop() {
         Flere floats samles i én struct i <code>types.h</code> — så sensor- og display-moduler deler
         samme datamodel uden løse globale variabler:
       </p>
-      <CodeBlock language="cpp">{`struct SensorReading {
+      <CodeBlock language="cpp" filename="include/types.h">{`struct SensorReading {
   float temperatureCelsius;
   float humidityPercent;
   float pressureKPa;

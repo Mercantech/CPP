@@ -6,6 +6,7 @@ import {
   saveQuizAnswer,
   type QuizQuestion,
 } from '../data/quizzes'
+import CodeBlock from './CodeBlock'
 
 function QuestionCard({
   q,
@@ -29,6 +30,11 @@ function QuestionCard({
   return (
     <div className="quiz">
       <p className="quiz__q">{q.question}</p>
+      {q.codeSnippet ? (
+        <CodeBlock language="cpp" filename={q.codeFilename ?? 'snippet.cpp'} showLineNumbers>
+          {q.codeSnippet}
+        </CodeBlock>
+      ) : null}
       <div className="quiz__options">
         {q.options.map((opt, i) => {
           let cls = ''

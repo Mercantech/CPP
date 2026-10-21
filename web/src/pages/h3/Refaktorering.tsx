@@ -109,8 +109,11 @@ export function RefaktoreringContent() {
 
       <h2>Workshop 1: Knap og LED</h2>
       <BeforeAfter
+        split
         before={before1}
         after={after1}
+        beforeFilename="button_led_messy.cpp"
+        afterFilename="button_led_clean.cpp"
         beforeNotes={
           <>
             Korte navne (<code>l</code>, <code>b</code>, <code>x</code>), logic midt i{' '}
@@ -127,8 +130,11 @@ export function RefaktoreringContent() {
 
       <h2>Workshop 2: Temperaturstyring</h2>
       <BeforeAfter
+        split
         before={before2}
         after={after2}
+        beforeFilename="temp_messy.cpp"
+        afterFilename="temp_clean.cpp"
         beforeNotes={
           <>
             Magiske tal, uklare variabelnavne, alt i <code>loop()</code>.
