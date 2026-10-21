@@ -9,10 +9,10 @@ export default function Home() {
           <h1 className="home-hero__brand">
             C<span>++</span>
           </h1>
-          <p className="home-hero__title">Struktureret kode til H3 — og historien bag sproget</p>
+          <p className="home-hero__title">Fra C# til struktureret C++ på Arduino</p>
           <p className="home-hero__lead">
-            Undervisningssider om Arduino C++: funktioner, datatyper, filopdeling og den røde tråd
-            fra C til C#. Ingen login. Bare pensum.
+            I kender allerede klasser, typer og scope fra C#. H3 tager jer videre til C++ på
+            Arduino — funktioner, filopdeling og historien bag sproget. Ingen login. Bare pensum.
           </p>
           <div className="cta-row">
             <Link className="btn btn--primary" to="/h3?present=1">
@@ -49,7 +49,7 @@ if (nowMs - lastDisplayUpdateMs
             <span className="path-row__body">
               <span className="path-row__label">Historie</span>
               <span className="path-row__desc">
-                Interaktiv tidslinje: Simula, C, Stroustrup, ISO, Java, C#, Arduino
+                Fra C til C++ — og hvor C# hænger på samme stamme (så springet giver mening)
               </span>
             </span>
             <span className="path-row__arrow" aria-hidden>

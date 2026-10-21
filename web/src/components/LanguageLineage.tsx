@@ -8,20 +8,25 @@ const nodes = [
 
 export default function LanguageLineage() {
   return (
-    <div className="lineage" aria-label="Sprogslægtsskab">
-      {nodes.map((n, i) => (
-        <div key={n.label} style={{ display: 'contents' }}>
-          {i > 0 ? (
-            <span className="lineage__arrow" aria-hidden>
-              →
-            </span>
-          ) : null}
-          <div className="lineage__node">
-            <img src={n.src} alt={`${n.label} logo`} width={56} height={56} />
-            <span>{n.label}</span>
+    <figure className="lineage-wrap">
+      <div className="lineage" aria-label="Sprogslægtsskab">
+        {nodes.map((n, i) => (
+          <div key={n.label} style={{ display: 'contents' }}>
+            {i > 0 ? (
+              <span className="lineage__arrow" aria-hidden>
+                →
+              </span>
+            ) : null}
+            <div className="lineage__node">
+              <img src={n.src} alt={`${n.label} logo`} width={56} height={56} />
+              <span>{n.label}</span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      <figcaption className="lineage__caption">
+        Historisk stamme: C → C++. I starter i C# og går til C++ på Arduino i H3.
+      </figcaption>
+    </figure>
   )
 }

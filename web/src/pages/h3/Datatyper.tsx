@@ -9,8 +9,10 @@ export function DatatyperContent() {
       <h1>Datatyper i Arduino C++</h1>
       <LessonIntro>
         <p>
-          Typen fortæller både <em>hvad</em> værdien betyder, og <em>hvor meget hukommelse</em> den
-          fylder. På Uno (2 KB SRAM) er det ikke akademisk — det er praktisk.
+          Fra C# kender I <code>int</code>, <code>bool</code>, <code>float</code> — idéen er den
+          samme. I C++ på Arduino fortæller typen både <em>hvad</em> værdien betyder, og{' '}
+          <em>hvor meget hukommelse</em> den fylder. På Uno (2 KB SRAM) er det ikke akademisk — det
+          er praktisk.
         </p>
       </LessonIntro>
 

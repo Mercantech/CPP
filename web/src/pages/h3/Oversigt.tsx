@@ -56,7 +56,8 @@ export function OversigtContent() {
       <h1>Struktureret C++ til Arduino (H3)</h1>
       <LessonIntro>
         <p>
-          Pensummet bygger på jeres rigtige projekt-skabelon:{' '}
+          I kommer fra C#. Her træner I den samme disciplin — struktur, typer, ansvar — i C++ på
+          Arduino. Pensummet bygger på jeres rigtige projekt-skabelon:{' '}
           <a href={TEMPLATE_REPO_URL} target="_blank" rel="noreferrer">
             Mercantech/H3 → Arduino
           </a>

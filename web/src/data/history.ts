@@ -145,13 +145,13 @@ export const historyEras: HistoryEra[] = [
     yearSort: 2000,
     title: 'C# og .NET',
     summary:
-      'Anders Hejlsberg m.fl. hos Microsoft laver C#: C-family syntaks, stærke typer, GC — men ikke en C++-klon.',
+      'Anders Hejlsberg m.fl. hos Microsoft laver C#: C-family syntaks, stærke typer, GC — det sprog I allerede kender.',
     detail: [
-      'C# er bevidst genkendeligt for C/C++/Java-programmører.',
-      'Hukommelse styres af runtime; unsafe/pointers findes, men er undtagelsen.',
-      'Når du kender klasser, scope og typer i C++, er springet til C# mindre end det ser ud.',
+      'C# er bevidst genkendeligt for C/C++/Java-programmører — og omvendt: din C#-baggrund hjælper dig i C++.',
+      'Hukommelse styres af runtime (GC); unsafe/pointers findes, men er undtagelsen.',
+      'Når I går til C++ på Arduino, genbruger I klasser, scope og typer — men I mister GC og får headers/.cpp og tættere hardware-kontrol.',
     ],
-    tags: ['C#', '.NET'],
+    tags: ['C#', '.NET', 'jeres baggrund'],
     logo: '/history/csharp.svg',
   },
   {
@@ -203,13 +203,13 @@ export const historyEras: HistoryEra[] = [
     yearSort: 2026,
     title: 'Broen til dit pensum',
     summary:
-      'C++ lever i spil, OS, finance og microcontrollers. Dit H3-arbejde træner den samme disciplin: struktur, typer, filer, stil.',
+      'I kommer fra C#. H3 er springet til C++ på microcontrollers — samme sprogfamilie, anden kontrakt om hukommelse og filer.',
     detail: [
       'Når du laver funktioner og .h/.cpp på Arduino, træner du industripraksis i lille skala.',
-      'C# føles familiært, fordi det står på samme syntaks- og type-tradition.',
+      'Genbrug det du kan fra C#: navngivning, typer, struktur — lær det nye: manuel kontrol, headers og ingen GC.',
       'Historien er ikke nostalgi — det er kortet over, hvorfor dine værktøjer ser ud, som de gør.',
     ],
-    tags: ['H3', 'praksis'],
+    tags: ['H3', 'C# → C++'],
   },
 ]
 

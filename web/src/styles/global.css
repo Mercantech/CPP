@@ -683,19 +683,31 @@ code {
 }
 
 /* Language lineage */
+.lineage-wrap {
+  margin: 2rem 0;
+}
+
 .lineage {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
   justify-content: center;
-  margin: 2rem 0;
+  margin: 0;
   padding: 1.5rem;
   background: rgba(14, 28, 50, 0.6);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow-x: auto;
   max-width: 100%;
+}
+
+.lineage__caption {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .lineage__node {
