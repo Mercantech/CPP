@@ -5,7 +5,7 @@ import LessonLayout from '../components/LessonLayout'
 
 export default function Historie() {
   return (
-    <LessonLayout module="historie">
+    <LessonLayout module="historie" hideSidebar>
       <h1>Historien bag C++</h1>
       <p>
         C++ er ikke bare “endnu et sprog”. Det er en bevidst evolution af C — designet til abstraktion
@@ -17,8 +17,8 @@ export default function Historie() {
 
       <Callout type="tip">
         <p>
-          <strong>Sådan bruges tidslinjen:</strong> klik et årstal i bjælken, bladre med Forrige/Næste,
-          eller udvid punkterne nedenunder. På tastatur: fokusér bjælken og brug piletasterne.
+          <strong>Tidslinjen:</strong> vælg et årstal, bladre med Forrige/Næste, eller brug
+          piletasterne når fokus er i området.
         </p>
       </Callout>
 

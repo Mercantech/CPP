@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useState } from 'react'
 import { historyErasSorted, type HistoryEra } from '../data/history'
 import Figure from './Figure'
 
@@ -39,12 +39,13 @@ function EraBody({ era }: { era: HistoryEra }) {
   )
 }
 
+function shortTitle(title: string) {
+  const base = title.split('—')[0]?.trim() ?? title
+  return base.length > 28 ? `${base.slice(0, 26)}…` : base
+}
+
 export default function InteractiveTimeline() {
   const [activeId, setActiveId] = useState(historyErasSorted[0]?.id ?? '')
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({
-    [historyErasSorted[0]?.id ?? '']: true,
-  })
-  const railRef = useRef<HTMLDivElement>(null)
   const labelId = useId()
 
   const active = historyErasSorted.find((e) => e.id === activeId) ?? historyErasSorted[0]
@@ -52,9 +53,6 @@ export default function InteractiveTimeline() {
 
   function select(era: HistoryEra) {
     setActiveId(era.id)
-    setExpanded((prev) => ({ ...prev, [era.id]: true }))
-    const el = document.getElementById(`era-${era.id}`)
-    el?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 
   function go(delta: number) {
@@ -65,65 +63,56 @@ export default function InteractiveTimeline() {
     select(historyErasSorted[next])
   }
 
-  useEffect(() => {
-    const btn = railRef.current?.querySelector<HTMLButtonElement>(
-      `[data-era-id="${activeId}"]`,
-    )
-    btn?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
-  }, [activeId])
-
   return (
-    <div className="interactive-timeline">
-      <div className="timeline-rail-wrap">
-        <p className="timeline-rail__hint" id={labelId}>
-          Klik et årstal — eller brug piletasterne når tidslinjen er i fokus
+    <div
+      className="interactive-timeline"
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault()
+          go(1)
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault()
+          go(-1)
+        }
+        if (e.key === 'Home') {
+          e.preventDefault()
+          select(historyErasSorted[0])
+        }
+        if (e.key === 'End') {
+          e.preventDefault()
+          select(historyErasSorted[historyErasSorted.length - 1])
+        }
+      }}
+    >
+      <div className="timeline-picker">
+        <p className="timeline-picker__hint" id={labelId}>
+          Vælg et årstal — eller brug Forrige/Næste og piletasterne
         </p>
         <div
-          className="timeline-rail"
-          ref={railRef}
+          className="timeline-picker__years"
           role="tablist"
           aria-labelledby={labelId}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-              e.preventDefault()
-              go(1)
-            }
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-              e.preventDefault()
-              go(-1)
-            }
-            if (e.key === 'Home') {
-              e.preventDefault()
-              select(historyErasSorted[0])
-            }
-            if (e.key === 'End') {
-              e.preventDefault()
-              select(historyErasSorted[historyErasSorted.length - 1])
-            }
-          }}
         >
-          <div className="timeline-rail__track" aria-hidden />
           {historyErasSorted.map((era) => (
             <button
               key={era.id}
               type="button"
               role="tab"
-              data-era-id={era.id}
               aria-selected={era.id === activeId}
               className={
                 era.id === activeId
-                  ? 'timeline-rail__node timeline-rail__node--active'
-                  : 'timeline-rail__node'
+                  ? 'timeline-year timeline-year--active'
+                  : 'timeline-year'
               }
               onClick={() => select(era)}
             >
-              <span className="timeline-rail__year">{era.year}</span>
-              <span className="timeline-rail__title">{era.title.split('—')[0].trim()}</span>
+              <span className="timeline-year__when">{era.year}</span>
+              <span className="timeline-year__what">{shortTitle(era.title)}</span>
             </button>
           ))}
         </div>
-        <div className="timeline-rail__nav">
+        <div className="timeline-picker__nav">
           <button
             type="button"
             className="btn btn--ghost"
@@ -132,7 +121,7 @@ export default function InteractiveTimeline() {
           >
             Forrige
           </button>
-          <span className="timeline-rail__count">
+          <span className="timeline-picker__count">
             {activeIndex + 1} / {historyErasSorted.length}
           </span>
           <button
@@ -155,42 +144,6 @@ export default function InteractiveTimeline() {
           <EraBody era={active} />
         </article>
       ) : null}
-
-      <h2>Hele tidslinjen</h2>
-      <p>Udvid et punkt for at læse detaljerne — eller hop via årstalsbjælken ovenfor.</p>
-      <div className="timeline timeline--interactive">
-        {historyErasSorted.map((era) => {
-          const open = !!expanded[era.id]
-          return (
-            <article
-              key={era.id}
-              id={`era-${era.id}`}
-              className={
-                era.id === activeId
-                  ? 'timeline__item timeline__item--focus'
-                  : 'timeline__item'
-              }
-            >
-              <button
-                type="button"
-                className="timeline__toggle"
-                aria-expanded={open}
-                onClick={() => {
-                  setActiveId(era.id)
-                  setExpanded((prev) => ({ ...prev, [era.id]: !prev[era.id] }))
-                }}
-              >
-                <span className="timeline__year">{era.year}</span>
-                <span className="timeline__toggle-title">{era.title}</span>
-                <span className="timeline__chevron" aria-hidden>
-                  {open ? '−' : '+'}
-                </span>
-              </button>
-              {open ? <EraBody era={era} /> : <p className="timeline__teaser">{era.summary}</p>}
-            </article>
-          )
-        })}
-      </div>
     </div>
   )
 }
