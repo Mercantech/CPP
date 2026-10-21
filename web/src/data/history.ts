@@ -78,7 +78,7 @@ export const historyEras: HistoryEra[] = [
       src: '/history/stroustrup.jpg',
       alt: 'Bjarne Stroustrup',
       caption: 'Bjarne Stroustrup — designer af C++',
-      sourceUrl: 'https://commons.wikimedia.org/wiki/File:Bjarne_Stroustrup.jpg',
+      sourceUrl: 'https://commons.wikimedia.org/wiki/File:Bjarne_Stroustrup_(2013).jpg',
     },
   },
   {
