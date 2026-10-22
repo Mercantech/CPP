@@ -24,6 +24,30 @@ export function DatatyperContent() {
         tavlen, men animeret).
       </p>
       <MemoryStage demo={bytesFillDemo} />
+      <Callout type="info">
+        <p>
+          <strong>Hvad betyder heks-tallene?</strong> Det er rå bytes i SRAM — sådan computeren
+          gemmer værdien (vist heksadecimalt).
+        </p>
+        <ul>
+          <li>
+            <code>02 00</code> — <code>int</code> 512 som to bytes (<code>0x0200</code>). På Uno er
+            byte-rækkefølgen i rigtig RAM ofte omvendt (little-endian); demoen er illustrativ.
+          </li>
+          <li>
+            <code>41 BC 00 00</code> — <code>float</code> 23.5 som fire bytes (IEEE 754), ikke “23”
+            og “.5” hver for sig.
+          </li>
+          <li>
+            <code>43</code> — <code>char</code> <code>'C'</code> (ASCII 67 = <code>0x43</code>), én
+            byte.
+          </li>
+        </ul>
+        <p>
+          Kort sagt: typen bestemmer <em>hvor mange</em> bytes; heks viser <em>hvordan</em> værdien
+          ligger i hukommelsen.
+        </p>
+      </Callout>
 
       <h2>Heltal</h2>
       <p>
