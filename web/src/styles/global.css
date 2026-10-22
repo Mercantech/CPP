@@ -557,22 +557,32 @@ code {
 
 .code-block {
   margin: 0;
-  padding: 0.5rem 0;
+  padding: 0.35rem 0;
   overflow-x: auto;
   background: var(--editor-bg);
   border: none;
   border-radius: 0;
   font-family: var(--font-mono);
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.code-block__source {
+  display: block;
+  margin: 0;
+  padding: 0 !important;
+  background: none !important;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
 }
 
 .code-block__line {
   display: flex;
-  align-items: baseline;
-  min-height: 0;
-  line-height: 1.45;
-  padding-right: 1rem;
+  align-items: center;
+  min-height: 1.35em;
+  line-height: 1.35;
+  padding: 0 0.75rem 0 0;
 }
 
 .code-block__line.is-active {
@@ -581,34 +591,33 @@ code {
 }
 
 .code-block__gutter {
-  flex: 0 0 2.5rem;
+  flex: 0 0 2.25rem;
   text-align: right;
-  padding: 0 0.65rem 0 0.4rem;
+  padding: 0 0.55rem 0 0.35rem;
   color: var(--gutter);
   user-select: none;
-  font-size: 0.75rem;
-  line-height: 1.45;
+  font-size: 0.72rem;
+  line-height: 1.35;
 }
 
-/* Override highlight.js .hljs { display:block; padding:0.5em } per line */
-.code-block__line code,
-.code-block__line code.hljs {
+/* Never inherit global `code { padding }` or hljs block padding */
+.code-block__content {
   flex: 1;
   display: block;
   margin: 0;
-  background: none !important;
   padding: 0 !important;
+  background: transparent !important;
   overflow: visible;
-  color: inherit;
   white-space: pre;
-  line-height: inherit;
-  font-size: inherit;
+  line-height: 1.35;
+  font: inherit;
+  color: inherit;
 }
 
-.code-block code {
-  background: none;
-  padding: 0;
-  color: inherit;
+.code-block__content.hljs {
+  display: block;
+  padding: 0 !important;
+  background: transparent !important;
 }
 
 .btn--sm {

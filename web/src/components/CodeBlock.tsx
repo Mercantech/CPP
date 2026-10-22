@@ -53,23 +53,25 @@ export default function CodeBlock({
         </div>
       </div>
       <pre className="code-block" tabIndex={0}>
-        {lines.map((_, i) => {
-          const n = i + 1
-          const active = highlightSet.has(n)
-          return (
-            <span key={i} className={active ? 'code-block__line is-active' : 'code-block__line'}>
-              {showLineNumbers ? (
-                <span className="code-block__gutter" aria-hidden>
-                  {n}
-                </span>
-              ) : null}
-              <code
-                className={label ? `hljs language-${label}` : 'hljs'}
-                dangerouslySetInnerHTML={{ __html: lineHtml[i] || '&nbsp;' }}
-              />
-            </span>
-          )
-        })}
+        <code className={label ? `code-block__source language-${label}` : 'code-block__source'}>
+          {lines.map((_, i) => {
+            const n = i + 1
+            const active = highlightSet.has(n)
+            return (
+              <span key={i} className={active ? 'code-block__line is-active' : 'code-block__line'}>
+                {showLineNumbers ? (
+                  <span className="code-block__gutter" aria-hidden>
+                    {n}
+                  </span>
+                ) : null}
+                <span
+                  className="code-block__content hljs"
+                  dangerouslySetInnerHTML={{ __html: lineHtml[i] || '&nbsp;' }}
+                />
+              </span>
+            )
+          })}
+        </code>
       </pre>
     </div>
   )
